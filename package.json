@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "DevPulse - Enterprise DevOps & Infrastructure Orchestrator",
   "private": true,
+  "license": "UNLICENSED",
   "workspaces": [
     "frontend",
     "backend"
@@ -28,6 +29,5 @@
     "helm",
     "sre"
   ],
-  "author": "DevPulse Team",
-  "license": "Apache-2.0"
+  "author": "DevPulse Platform Engineering Team"
 }

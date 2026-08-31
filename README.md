@@ -119,4 +119,4 @@ This repository is maintained following strict GitOps conventions. Major feature
 ---
 
 ## 🛡️ License
-Licensed under the Apache 2.0 License.
+Proprietary - All rights reserved. DevPulse Platform Engineering.

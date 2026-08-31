@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "DevPulse Core API Gateway & DevOps Microservices Engine",
   "main": "dist/server.js",
+  "license": "UNLICENSED",
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
