@@ -1,0 +1,33 @@
+{
+  "name": "devpulse-platform",
+  "version": "1.0.0",
+  "description": "DevPulse - Enterprise DevOps & Infrastructure Orchestrator",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "setup": "npm --prefix backend install && npm --prefix frontend install",
+    "dev": "concurrently \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
+    "build": "npm --prefix backend run build && npm --prefix frontend run build",
+    "start": "npm --prefix backend run start",
+    "test": "npm --prefix backend test && npm --prefix frontend test",
+    "lint": "npm --prefix backend run lint && npm --prefix frontend run lint"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "devops",
+    "kubernetes",
+    "terraform",
+    "ci-cd",
+    "gitops",
+    "observability",
+    "helm",
+    "sre"
+  ],
+  "author": "DevPulse Team",
+  "license": "Apache-2.0"
+}

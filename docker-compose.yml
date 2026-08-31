@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  devpulse-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: devpulse-backend
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+      - JWT_SECRET=devpulse-super-secret-key-2026
+      - CORS_ORIGIN=http://localhost:5173,http://localhost:3000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - devpulse-network
+
+  devpulse-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: devpulse-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - devpulse-backend
+    environment:
+      - VITE_API_URL=http://localhost:4000/api
+    networks:
+      - devpulse-network
+
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    container_name: devpulse-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./iac/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - devpulse-network
+
+  grafana:
+    image: grafana/grafana:10.0.3
+    container_name: devpulse-grafana
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - prometheus
+    networks:
+      - devpulse-network
+
+networks:
+  devpulse-network:
+    driver: bridge
