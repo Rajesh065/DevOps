@@ -1,0 +1,37 @@
+name: SLSA Level 3 Supply Chain Attestation Pipeline
+version: 2.1.0
+
+triggers:
+  push:
+    branches:
+      - main
+      - release/*
+    tags:
+      - v*
+
+stages:
+  - id: stage-build-container
+    name: Build Hardened Container
+    steps:
+      - name: Build Multi-Arch Image
+        image: docker:24.0.7-dind
+        command: |
+          docker buildx create --use
+          docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/devpulse/auth-gateway:${CI_COMMIT_SHA} --push .
+
+  - id: stage-sbom-generation
+    name: Generate Software Bill of Materials (SBOM)
+    steps:
+      - name: CycloneDX Syft SBOM Extraction
+        image: anchore/syft:v0.100.0
+        command: |
+          syft ghcr.io/devpulse/auth-gateway:${CI_COMMIT_SHA} -o cyclonedx-json > sbom.cyclonedx.json
+
+  - id: stage-cosign-attestation
+    name: Sigstore Cosign Attestation & Keyless Signing
+    steps:
+      - name: Sign Image Digest
+        image: gcr.io/projectsigstore/cosign:v2.2.3
+        command: |
+          cosign sign --yes ghcr.io/devpulse/auth-gateway:${CI_COMMIT_SHA}
+          cosign attest --yes --predicate sbom.cyclonedx.json --type spdxjson ghcr.io/devpulse/auth-gateway:${CI_COMMIT_SHA}
