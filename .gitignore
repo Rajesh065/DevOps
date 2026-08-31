@@ -1,0 +1,8 @@
+node_modules/
+dist/
+build/
+devpulse-devops-platform.zip
+*.log
+.env
+.DS_Store
+Thumbs.db
