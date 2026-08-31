@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+    background-color: #0d1117;
+    color: #e6edf3;
+  }
+
+  code, pre, .font-mono {
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+  }
+}
+
+/* GitHub/Linear style subtle scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d1117;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8b949e;
+}
+
+/* Custom subtle borders */
+.gh-card {
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+}
+
+.gh-header {
+  background-color: #161b22;
+  border-bottom: 1px solid #30363d;
+}
+
+.gh-table-header {
+  background-color: #161b22;
+  border-bottom: 1px solid #30363d;
+  color: #8b949e;
+  font-size: 12px;
+  font-weight: 600;
+}
