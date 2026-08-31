@@ -1,0 +1,15 @@
+apiVersion: v2
+name: devpulse
+description: Enterprise Helm Chart for DevPulse Full-Stack DevOps & IDP Platform
+type: application
+version: 1.2.0
+appVersion: "1.2.0"
+maintainers:
+  - name: DevPulse Platform Team
+    email: sre-team@devpulse.internal
+keywords:
+  - devops
+  - kubernetes
+  - idp
+  - gitops
+  - observability

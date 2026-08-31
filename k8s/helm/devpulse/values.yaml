@@ -1,0 +1,90 @@
+global:
+  environment: production
+  domain: devpulse.internal
+
+backend:
+  replicaCount: 3
+  image:
+    repository: registry.devpulse.internal/backend
+    tag: "v1.2.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 4000
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 12
+    targetCPUUtilizationPercentage: 75
+    targetMemoryUtilizationPercentage: 80
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+  env:
+    NODE_ENV: production
+    PORT: "4000"
+
+frontend:
+  replicaCount: 2
+  image:
+    repository: registry.devpulse.internal/frontend
+    tag: "v1.2.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+  hosts:
+    - host: devpulse.internal
+      paths:
+        - path: /api
+          pathType: Prefix
+          serviceName: devpulse-backend
+          servicePort: 4000
+        - path: /
+          pathType: Prefix
+          serviceName: devpulse-frontend
+          servicePort: 80
+  tls:
+    - secretName: devpulse-tls-cert
+      hosts:
+        - devpulse.internal
+
+networkPolicy:
+  enabled: true
+  allowPrometheusScrape: true
+
+podDisruptionBudget:
+  minAvailable: 2
