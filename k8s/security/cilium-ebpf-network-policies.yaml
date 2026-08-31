@@ -1,0 +1,37 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "zero-trust-isolate-core-services"
+  namespace: "core-services"
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/part-of: devpulse-platform
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+          rules:
+            http:
+              - method: "GET"
+                path: "/api/.*"
+              - method: "POST"
+                path: "/api/.*"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: vault-consul
+      toPorts:
+        - ports:
+            - port: "8200"
+              protocol: TCP
+    - toFQDNs:
+        - matchName: "api.github.com"
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP

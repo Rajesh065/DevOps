@@ -6,6 +6,7 @@ import iacRoutes from './iacRoutes.js';
 import observabilityRoutes from './observabilityRoutes.js';
 import securityRoutes from './securityRoutes.js';
 import authRoutes from './authRoutes.js';
+import networkSecurityRoutes from './networkSecurityRoutes.js';
 
 const apiRouter = Router();
 
@@ -20,7 +21,8 @@ apiRouter.get('/health', (req, res) => {
       gitopsGatekeeper: 'active',
       k8sClusterManager: 'active',
       iacDriftEngine: 'active',
-      telemetryBroadcaster: 'active'
+      telemetryBroadcaster: 'active',
+      ebpfNetworkSecurity: 'active'
     }
   });
 });
@@ -32,5 +34,6 @@ apiRouter.use('/iac', iacRoutes);
 apiRouter.use('/observability', observabilityRoutes);
 apiRouter.use('/security', securityRoutes);
 apiRouter.use('/auth', authRoutes);
+apiRouter.use('/network-security', networkSecurityRoutes);
 
 export default apiRouter;
