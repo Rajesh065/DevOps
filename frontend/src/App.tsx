@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
-import { Sidebar } from './components/Sidebar';
 import { DashboardOverview } from './pages/DashboardOverview';
 import { PipelineViewer } from './pages/PipelineViewer';
 import { PullRequestManager } from './pages/PullRequestManager';
@@ -98,52 +97,55 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0d1117] text-[#e6edf3] flex flex-col font-sans">
-      <Navbar activeTab={activeTab} wsConnected={wsConnected} closedPrCount={closedPrCount} />
+      {/* Horizontal Top Navbar */}
+      <Navbar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        wsConnected={wsConnected}
+        closedPrCount={closedPrCount}
+      />
 
-      <div className="flex flex-1">
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} closedPrCount={closedPrCount} />
+      {/* Main Content Area (Spacious Full-Width Container) */}
+      <main className="flex-1 p-5 lg:p-7 max-w-7xl mx-auto w-full">
+        {activeTab === 'dashboard' && (
+          <DashboardOverview
+            pipelines={pipelines}
+            pullRequests={pullRequests}
+            clusters={clusters}
+            liveMetric={liveMetric}
+            onNavigate={setActiveTab}
+          />
+        )}
 
-        <main className="flex-1 p-5 lg:p-6 max-w-7xl mx-auto w-full overflow-x-hidden">
-          {activeTab === 'dashboard' && (
-            <DashboardOverview
-              pipelines={pipelines}
-              pullRequests={pullRequests}
-              clusters={clusters}
-              liveMetric={liveMetric}
-              onNavigate={setActiveTab}
-            />
-          )}
+        {activeTab === 'pipelines' && (
+          <PipelineViewer pipelines={pipelines} onRefresh={fetchAllData} />
+        )}
 
-          {activeTab === 'pipelines' && (
-            <PipelineViewer pipelines={pipelines} onRefresh={fetchAllData} />
-          )}
+        {activeTab === 'pull-requests' && (
+          <PullRequestManager pullRequests={pullRequests} onRefresh={fetchAllData} />
+        )}
 
-          {activeTab === 'pull-requests' && (
-            <PullRequestManager pullRequests={pullRequests} onRefresh={fetchAllData} />
-          )}
+        {activeTab === 'kubernetes' && (
+          <KubernetesExplorer clusters={clusters} pods={pods} onRefresh={fetchAllData} />
+        )}
 
-          {activeTab === 'kubernetes' && (
-            <KubernetesExplorer clusters={clusters} pods={pods} onRefresh={fetchAllData} />
-          )}
+        {activeTab === 'iac' && (
+          <IaCManager workspaces={workspaces} onRefresh={fetchAllData} />
+        )}
 
-          {activeTab === 'iac' && (
-            <IaCManager workspaces={workspaces} onRefresh={fetchAllData} />
-          )}
+        {activeTab === 'observability' && (
+          <ObservabilityCenter
+            metrics={metrics}
+            alerts={alerts}
+            liveMetric={liveMetric}
+            onRefresh={fetchAllData}
+          />
+        )}
 
-          {activeTab === 'observability' && (
-            <ObservabilityCenter
-              metrics={metrics}
-              alerts={alerts}
-              liveMetric={liveMetric}
-              onRefresh={fetchAllData}
-            />
-          )}
-
-          {activeTab === 'security' && (
-            <SecurityPolicies policies={policies} />
-          )}
-        </main>
-      </div>
+        {activeTab === 'security' && (
+          <SecurityPolicies policies={policies} />
+        )}
+      </main>
     </div>
   );
 };
