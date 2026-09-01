@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
+import { AuthModal } from './components/AuthModal';
 import { HomePage } from './pages/HomePage';
 import { LearnPage } from './pages/LearnPage';
 import { PlatformsPage } from './pages/PlatformsPage';
@@ -8,12 +9,15 @@ import { PlatformDetailPage } from './pages/PlatformDetailPage';
 import { ComparePage } from './pages/ComparePage';
 import { DashboardPage } from './pages/DashboardPage';
 import { BookmarksPage } from './pages/BookmarksPage';
+import { InterviewPrepPage } from './pages/InterviewPrepPage';
+import { YamlGeneratorPage } from './pages/YamlGeneratorPage';
+import { ArchitectGovernancePage } from './pages/ArchitectGovernancePage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 import { learningTopicsData } from './data/learningTopics';
 import { platformsData } from './data/platformsData';
 import { useDevOpsStorage } from './hooks/useDevOpsStorage';
-import { Platform } from './types/navigator';
+import { Platform, UserRole } from './types/navigator';
 
 export const App: React.FC = () => {
   // Page Routing State
@@ -21,9 +25,14 @@ export const App: React.FC = () => {
   const [selectedTopicSlug, setSelectedTopicSlug] = useState<string | null>(null);
   const [selectedPlatform, setSelectedPlatform] = useState<Platform | null>(null);
   const [comparedPlatformIds, setComparedPlatformIds] = useState<string[]>([]);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
 
-  // LocalStorage Custom Hook
+  // LocalStorage Custom Hook with Persona Auth
   const {
+    currentUser,
+    switchPersona,
+    loginUser,
+    signupUser,
     completedLessons,
     bookmarkedPlatforms,
     recentlyViewed,
@@ -74,19 +83,21 @@ export const App: React.FC = () => {
 
   return (
     <div className={`min-h-screen flex flex-col font-sans transition-colors duration-200 ${theme === 'dark' ? 'bg-[#0d1117] text-[#e6edf3]' : 'bg-[#f6f8fa] text-[#1f2328]'}`}>
-      {/* Top Navigation Bar */}
+      {/* Top Navigation Bar (Clean Text, No Icon, Role Tabs) */}
       <Navbar
         activePage={activePage}
         setActivePage={setActivePage}
+        currentUser={currentUser}
         completedCount={completedLessons.length}
         totalLessons={learningTopicsData.length}
         bookmarkCount={bookmarkedPlatforms.length}
         theme={theme}
         toggleTheme={toggleTheme}
+        onOpenAuth={() => setIsAuthModalOpen(true)}
       />
 
-      {/* Main Page Body */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 sm:py-8">
+      {/* Main Page Body - Balanced Full Width (Max 1600px with generous margins) */}
+      <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 py-6 sm:py-8">
         {activePage === 'home' && (
           <HomePage
             platforms={platformsData}
@@ -168,10 +179,31 @@ export const App: React.FC = () => {
           />
         )}
 
-        {!['home', 'learn', 'platforms', 'platform-detail', 'compare', 'dashboard', 'bookmarks'].includes(activePage) && (
+        {activePage === 'interview-prep' && (
+          <InterviewPrepPage />
+        )}
+
+        {activePage === 'yaml-gen' && (
+          <YamlGeneratorPage />
+        )}
+
+        {activePage === 'governance' && (
+          <ArchitectGovernancePage />
+        )}
+
+        {!['home', 'learn', 'platforms', 'platform-detail', 'compare', 'dashboard', 'bookmarks', 'interview-prep', 'yaml-gen', 'governance'].includes(activePage) && (
           <NotFoundPage onNavigate={handleNavigate} />
         )}
       </main>
+
+      {/* Auth & Persona Switcher Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLogin={loginUser}
+        onSignup={signupUser}
+        currentRole={currentUser.role}
+      />
 
       {/* Global Footer */}
       <Footer setActivePage={setActivePage} />

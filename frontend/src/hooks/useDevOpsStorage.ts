@@ -1,34 +1,47 @@
 import { useState, useEffect } from 'react';
+import { UserAccount, UserRole } from '../types/navigator';
+import { predefinedPersonas } from '../data/personasData';
 
 const STORAGE_KEYS = {
   COMPLETED_LESSONS: 'devops_nav_completed_lessons',
   BOOKMARKED_PLATFORMS: 'devops_nav_bookmarked_platforms',
   RECENTLY_VIEWED: 'devops_nav_recently_viewed',
-  THEME: 'devops_nav_theme'
+  THEME: 'devops_nav_theme',
+  CURRENT_USER: 'devops_nav_current_user'
 };
 
 export function useDevOpsStorage() {
-  // 1. Completed Lessons State
+  // 1. Current Logged-In User Account
+  const [currentUser, setCurrentUser] = useState<UserAccount>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+      return saved ? JSON.parse(saved) : predefinedPersonas.developer; // Default to developer
+    } catch {
+      return predefinedPersonas.developer;
+    }
+  });
+
+  // 2. Completed Lessons State
   const [completedLessons, setCompletedLessons] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.COMPLETED_LESSONS);
-      return saved ? JSON.parse(saved) : ['topic-1']; // Default start with 1 lesson completed
+      return saved ? JSON.parse(saved) : ['topic-1', 'topic-2'];
     } catch {
-      return ['topic-1'];
+      return ['topic-1', 'topic-2'];
     }
   });
 
-  // 2. Bookmarked Platforms State
+  // 3. Bookmarked Platforms State
   const [bookmarkedPlatforms, setBookmarkedPlatforms] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.BOOKMARKED_PLATFORMS);
-      return saved ? JSON.parse(saved) : ['plat-github-actions', 'plat-jenkins'];
+      return saved ? JSON.parse(saved) : ['plat-github-actions', 'plat-jenkins', 'plat-gitlab-ci'];
     } catch {
-      return ['plat-github-actions', 'plat-jenkins'];
+      return ['plat-github-actions', 'plat-jenkins', 'plat-gitlab-ci'];
     }
   });
 
-  // 3. Recently Viewed Platforms State
+  // 4. Recently Viewed Platforms State
   const [recentlyViewed, setRecentlyViewed] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.RECENTLY_VIEWED);
@@ -38,7 +51,7 @@ export function useDevOpsStorage() {
     }
   });
 
-  // 4. Theme Preference State (default to dark)
+  // 5. Theme Preference State
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.THEME);
@@ -49,6 +62,14 @@ export function useDevOpsStorage() {
   });
 
   // Sync to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [currentUser]);
+
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEYS.COMPLETED_LESSONS, JSON.stringify(completedLessons));
@@ -86,7 +107,41 @@ export function useDevOpsStorage() {
     }
   }, [theme]);
 
-  // Actions
+  // Auth & Persona Actions
+  const switchPersona = (role: UserRole) => {
+    setCurrentUser(predefinedPersonas[role]);
+  };
+
+  const loginUser = (email: string, role: UserRole) => {
+    const persona = predefinedPersonas[role];
+    setCurrentUser({
+      ...persona,
+      email: email || persona.email
+    });
+  };
+
+  const signupUser = (name: string, email: string, role: UserRole) => {
+    const initials = name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .substring(0, 2)
+      .toUpperCase() || 'U';
+
+    const newUser: UserAccount = {
+      id: 'user-' + Math.random().toString(36).substring(2, 8),
+      name: name || 'DevOps User',
+      email: email || 'user@devopsnav.io',
+      role,
+      avatarText: initials,
+      joinedDate: 'Joined Sep 2026',
+      bio: predefinedPersonas[role].bio
+    };
+
+    setCurrentUser(newUser);
+  };
+
+  // Learning & Bookmark Actions
   const toggleLessonComplete = (topicId: string) => {
     setCompletedLessons(prev =>
       prev.includes(topicId) ? prev.filter(id => id !== topicId) : [...prev, topicId]
@@ -121,6 +176,10 @@ export function useDevOpsStorage() {
   };
 
   return {
+    currentUser,
+    switchPersona,
+    loginUser,
+    signupUser,
     completedLessons,
     bookmarkedPlatforms,
     recentlyViewed,

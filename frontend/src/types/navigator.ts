@@ -2,6 +2,18 @@ export type DifficultyLevel = 'Beginner' | 'Intermediate' | 'Advanced';
 export type LicenseType = 'Open Source' | 'Proprietary / SaaS' | 'Freemium' | 'Commercial';
 export type DeploymentType = 'Cloud (SaaS)' | 'Self-Hosted' | 'Hybrid (Cloud & Self-Hosted)';
 
+export type UserRole = 'student' | 'developer' | 'architect' | 'jobseeker';
+
+export interface UserAccount {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  avatarText: string;
+  joinedDate: string;
+  bio: string;
+}
+
 export interface LearningTopic {
   id: string;
   slug: string;
@@ -9,7 +21,7 @@ export interface LearningTopic {
   shortDescription: string;
   category: 'Fundamentals' | 'CI/CD' | 'Pipelines' | 'Infrastructure' | 'Security';
   difficulty: DifficultyLevel;
-  estimatedTime: string; // e.g. "12 mins"
+  estimatedTime: string;
   order: number;
   overview: string;
   keyTakeaways: string[];
@@ -56,12 +68,14 @@ export interface Platform {
     explanation: string;
   };
   bestFor: string;
-  rating: number; // 1-5
+  rating: number;
 }
 
-export interface ComparisonDimension {
-  key: keyof Platform | string;
-  label: string;
-  category: 'Overview' | 'Deployment & Cloud' | 'Ecosystem Integration' | 'Usability';
-  renderType: 'text' | 'boolean' | 'badge' | 'list';
+export interface InterviewQuestion {
+  id: string;
+  category: 'CI/CD' | 'Kubernetes' | 'Architecture' | 'GitOps' | 'Monitoring';
+  question: string;
+  difficulty: 'Junior' | 'Mid' | 'Senior';
+  answer: string;
+  keyKeywords: string[];
 }
