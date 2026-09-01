@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { UserAccount, UserRole } from '../types/navigator';
+import { UserAccount } from '../types/navigator';
 import { predefinedPersonas } from '../data/personasData';
 
 const STORAGE_KEYS = {
@@ -7,17 +7,17 @@ const STORAGE_KEYS = {
   BOOKMARKED_PLATFORMS: 'devops_nav_bookmarked_platforms',
   RECENTLY_VIEWED: 'devops_nav_recently_viewed',
   THEME: 'devops_nav_theme',
-  CURRENT_USER: 'devops_nav_current_user'
+  CURRENT_USER: 'devops_nav_student_user'
 };
 
 export function useDevOpsStorage() {
-  // 1. Current Logged-In User Account
+  // 1. Current Student User Account (Default to Student Alex Rivera)
   const [currentUser, setCurrentUser] = useState<UserAccount>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
-      return saved ? JSON.parse(saved) : predefinedPersonas.developer; // Default to developer
+      return saved ? JSON.parse(saved) : predefinedPersonas.student;
     } catch {
-      return predefinedPersonas.developer;
+      return predefinedPersonas.student;
     }
   });
 
@@ -25,9 +25,9 @@ export function useDevOpsStorage() {
   const [completedLessons, setCompletedLessons] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.COMPLETED_LESSONS);
-      return saved ? JSON.parse(saved) : ['topic-1', 'topic-2'];
+      return saved ? JSON.parse(saved) : ['topic-1'];
     } catch {
-      return ['topic-1', 'topic-2'];
+      return ['topic-1'];
     }
   });
 
@@ -48,16 +48,6 @@ export function useDevOpsStorage() {
       return saved ? JSON.parse(saved) : ['plat-github-actions', 'plat-gitlab-ci', 'plat-argocd'];
     } catch {
       return ['plat-github-actions', 'plat-gitlab-ci', 'plat-argocd'];
-    }
-  });
-
-  // 5. Theme Preference State
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.THEME);
-      return saved === 'light' ? 'light' : 'dark';
-    } catch {
-      return 'dark';
     }
   });
 
@@ -94,52 +84,21 @@ export function useDevOpsStorage() {
     }
   }, [recentlyViewed]);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEYS.THEME, theme);
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }, [theme]);
-
-  // Auth & Persona Actions
-  const switchPersona = (role: UserRole) => {
-    setCurrentUser(predefinedPersonas[role]);
-  };
-
-  const loginUser = (email: string, role: UserRole) => {
-    const persona = predefinedPersonas[role];
-    setCurrentUser({
-      ...persona,
-      email: email || persona.email
-    });
-  };
-
-  const signupUser = (name: string, email: string, role: UserRole) => {
+  // Update Student Profile
+  const updateStudentProfile = (name: string, email: string) => {
     const initials = name
       .split(' ')
       .map(n => n[0])
       .join('')
       .substring(0, 2)
-      .toUpperCase() || 'U';
+      .toUpperCase() || 'ST';
 
-    const newUser: UserAccount = {
-      id: 'user-' + Math.random().toString(36).substring(2, 8),
-      name: name || 'DevOps User',
-      email: email || 'user@devopsnav.io',
-      role,
-      title: predefinedPersonas[role].title,
-      avatarText: initials,
-      joinedDate: 'Joined Sep 2026',
-      bio: predefinedPersonas[role].bio
-    };
-
-    setCurrentUser(newUser);
+    setCurrentUser(prev => ({
+      ...prev,
+      name,
+      email,
+      avatarText: initials
+    }));
   };
 
   // Learning & Bookmark Actions
@@ -166,10 +125,6 @@ export function useDevOpsStorage() {
     });
   };
 
-  const toggleTheme = () => {
-    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
-  };
-
   const resetProgress = () => {
     setCompletedLessons([]);
     setBookmarkedPlatforms([]);
@@ -178,19 +133,15 @@ export function useDevOpsStorage() {
 
   return {
     currentUser,
-    switchPersona,
-    loginUser,
-    signupUser,
+    updateStudentProfile,
     completedLessons,
     bookmarkedPlatforms,
     recentlyViewed,
-    theme,
     toggleLessonComplete,
     isLessonCompleted,
     toggleBookmark,
     isBookmarked,
     addRecentlyViewed,
-    toggleTheme,
     resetProgress
   };
 }
