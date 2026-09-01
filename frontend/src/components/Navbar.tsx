@@ -1,129 +1,152 @@
 import React from 'react';
 import {
-  GitBranch,
-  GitPullRequest,
-  Search,
-  LayoutDashboard,
-  GitFork,
-  Server,
+  Compass,
+  BookOpen,
   Layers,
-  Activity,
-  ShieldCheck
+  GitCompare,
+  LayoutDashboard,
+  Bookmark,
+  Sun,
+  Moon,
+  Search,
+  CheckCircle2
 } from 'lucide-react';
 
 interface NavbarProps {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-  wsConnected: boolean;
-  closedPrCount: number;
+  activePage: string;
+  setActivePage: (page: string) => void;
+  completedCount: number;
+  totalLessons: number;
+  bookmarkCount: number;
+  theme: 'dark' | 'light';
+  toggleTheme: () => void;
+  onSearchClick?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
-  activeTab,
-  setActiveTab,
-  wsConnected,
-  closedPrCount
+  activePage,
+  setActivePage,
+  completedCount,
+  totalLessons,
+  bookmarkCount,
+  theme,
+  toggleTheme,
+  onSearchClick
 }) => {
-  const navigationTabs = [
+  const navLinks = [
+    { id: 'home', label: 'Home', icon: Compass },
+    { id: 'learn', label: 'Learn DevOps', icon: BookOpen, badge: `${completedCount}/${totalLessons}` },
+    { id: 'platforms', label: 'CI/CD Platforms', icon: Layers, badge: '8 Platforms' },
+    { id: 'compare', label: 'Compare Platforms', icon: GitCompare },
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'pipelines', label: 'Pipelines & CI/CD', icon: GitFork, badge: 'Live' },
-    { id: 'pull-requests', label: 'Pull Requests', icon: GitPullRequest, badge: `${closedPrCount}` },
-    { id: 'kubernetes', label: 'Kubernetes Workloads', icon: Server, badge: '3 Clusters' },
-    { id: 'iac', label: 'Terraform & IaC', icon: Layers },
-    { id: 'observability', label: 'Metrics & Telemetry', icon: Activity, badge: 'Prometheus' },
-    { id: 'security', label: 'Policies & Security', icon: ShieldCheck }
+    { id: 'bookmarks', label: 'Bookmarks', icon: Bookmark, badge: bookmarkCount > 0 ? `${bookmarkCount}` : undefined }
   ];
 
+  const progressPercent = Math.round((completedCount / totalLessons) * 100) || 0;
+
   return (
-    <header className="bg-[#161b22] border-b border-[#30363d] sticky top-0 z-40 select-none">
+    <header className="sticky top-0 z-50 bg-[#161b22] border-b border-[#30363d] select-none shadow-sm">
       {/* Top Header Bar */}
-      <div className="h-14 px-4 lg:px-6 flex items-center justify-between border-b border-[#21262d]">
-        {/* Left: Organization / Repo switcher (Without Icon) */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 text-sm font-semibold text-[#e6edf3] pr-3 border-r border-[#30363d]">
-            <span className="text-[#8b949e] font-normal hover:underline cursor-pointer">deveops</span>
-            <span className="text-[#8b949e]">/</span>
-            <span className="hover:underline cursor-pointer text-[#e6edf3] font-bold">devpulse-platform</span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+        {/* Left: Brand / Title */}
+        <div
+          onClick={() => setActivePage('home')}
+          className="flex items-center gap-2.5 cursor-pointer group"
+        >
+          <div className="w-8 h-8 rounded-md bg-[#21262d] border border-[#30363d] flex items-center justify-center text-[#58a6ff] group-hover:border-[#58a6ff] transition-colors">
+            <Compass className="w-4.5 h-4.5" />
           </div>
-
-          {/* Environment pill */}
-          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#21262d] border border-[#30363d] text-[11px] font-mono text-[#8b949e]">
-            <GitBranch className="w-3 h-3 text-[#3fb950]" />
-            <span className="text-[#e6edf3]">main</span>
-            <span className="text-[#8b949e]">•</span>
-            <span className="text-[#3fb950] font-semibold">prod-us-east</span>
+          <div>
+            <div className="flex items-center gap-1.5">
+              <span className="font-bold text-sm text-[#e6edf3] tracking-tight">DevOps Navigator</span>
+              <span className="px-1.5 py-0.2 rounded text-[10px] font-mono bg-[#238636]/20 text-[#3fb950] border border-[#238636]/30">
+                v2.0
+              </span>
+            </div>
+            <p className="text-[10px] text-[#8b949e] font-mono hidden sm:block">Learning & CI/CD Platform Explorer</p>
           </div>
         </div>
 
-        {/* Center: Search */}
-        <div className="hidden md:flex items-center gap-2 bg-[#0d1117] border border-[#30363d] hover:border-[#8b949e] transition-colors rounded-md px-3 py-1 w-80 text-xs text-[#8b949e]">
-          <Search className="w-3.5 h-3.5" />
-          <input
-            type="text"
-            placeholder="Type / to search pipelines, PRs, clusters..."
-            className="bg-transparent border-none outline-none text-[#e6edf3] placeholder-[#8b949e] w-full text-xs font-mono"
-          />
-          <kbd className="text-[10px] font-mono bg-[#21262d] px-1.5 py-0.5 rounded border border-[#30363d] text-[#8b949e]">⌘K</kbd>
-        </div>
+        {/* Center / Right Controls: Quick Search, Progress pill, Theme toggle */}
+        <div className="flex items-center gap-2.5 sm:gap-3.5">
+          {/* Quick Search trigger button */}
+          <button
+            onClick={() => {
+              setActivePage('platforms');
+              if (onSearchClick) onSearchClick();
+            }}
+            className="flex items-center gap-2 bg-[#0d1117] hover:bg-[#21262d] border border-[#30363d] text-[#8b949e] px-2.5 py-1 rounded text-xs transition-colors"
+          >
+            <Search className="w-3.5 h-3.5" />
+            <span className="hidden md:inline">Search platforms...</span>
+            <kbd className="hidden md:inline text-[10px] font-mono bg-[#161b22] px-1.5 py-0.5 rounded border border-[#30363d]">/ </kbd>
+          </button>
 
-        {/* Right Actions */}
-        <div className="flex items-center gap-3">
-          {/* WebSocket health indicator */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono text-[#8b949e] bg-[#0d1117] border border-[#30363d]">
-            <span className={`w-2 h-2 rounded-full ${wsConnected ? 'bg-[#3fb950]' : 'bg-[#f85149]'}`} />
-            <span className="hidden sm:inline">{wsConnected ? 'Cluster Live' : 'Reconnecting'}</span>
-          </div>
+          {/* Quick Progress Indicator */}
+          <button
+            onClick={() => setActivePage('dashboard')}
+            title="View Learning Progress in Dashboard"
+            className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded bg-[#21262d] border border-[#30363d] text-xs hover:border-[#8b949e] transition-colors"
+          >
+            <div className="w-16 bg-[#0d1117] h-1.5 rounded-full overflow-hidden border border-[#30363d]">
+              <div
+                className="bg-[#3fb950] h-full rounded-full transition-all duration-300"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+            <span className="font-mono text-[11px] text-[#3fb950] font-semibold">{progressPercent}%</span>
+          </button>
 
-          {/* User Profile */}
-          <div className="flex items-center gap-2 pl-2 border-l border-[#30363d]">
-            <div className="w-7 h-7 rounded-full bg-[#238636] border border-[#30363d] flex items-center justify-center text-white text-xs font-bold font-mono">
-              SD
-            </div>
-            <div className="hidden lg:block text-left">
-              <p className="text-xs font-semibold text-[#e6edf3] leading-none">sarah-devops</p>
-              <p className="text-[10px] text-[#8b949e] font-mono leading-tight mt-0.5">Staff DevOps Engineer</p>
-            </div>
-          </div>
+          {/* Light / Dark Mode Toggle */}
+          <button
+            onClick={toggleTheme}
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            className="p-1.5 rounded bg-[#21262d] hover:bg-[#30363d] text-[#e6edf3] border border-[#30363d] transition-colors"
+          >
+            {theme === 'dark' ? <Sun className="w-3.5 h-3.5 text-[#d29922]" /> : <Moon className="w-3.5 h-3.5 text-[#58a6ff]" />}
+          </button>
         </div>
       </div>
 
-      {/* Horizontal Navigation Bar (GitHub Repository Tabs Style) */}
-      <div className="px-4 lg:px-6 flex items-center gap-1 overflow-x-auto text-xs font-medium scrollbar-none">
-        {navigationTabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
+      {/* Horizontal Navigation Tabs (Full Width GitHub / Linear Style) */}
+      <div className="border-t border-[#21262d] bg-[#161b22]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center gap-1 sm:gap-2 overflow-x-auto text-xs font-medium scrollbar-none py-0.5">
+          {navLinks.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activePage === tab.id;
 
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-3.5 py-2.5 border-b-2 whitespace-nowrap transition-colors ${
-                isActive
-                  ? 'border-[#f78166] text-[#e6edf3] font-semibold'
-                  : 'border-transparent text-[#8b949e] hover:text-[#e6edf3] hover:border-[#8b949e]/50'
-              }`}
-            >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-[#58a6ff]' : 'text-[#8b949e]'}`} />
-              <span>{tab.label}</span>
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActivePage(tab.id)}
+                className={`flex items-center gap-2 px-3 py-2 border-b-2 whitespace-nowrap transition-colors ${
+                  isActive
+                    ? 'border-[#f78166] text-[#e6edf3] font-semibold'
+                    : 'border-transparent text-[#8b949e] hover:text-[#e6edf3] hover:border-[#8b949e]/50'
+                }`}
+              >
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#58a6ff]' : 'text-[#8b949e]'}`} />
+                <span>{tab.label}</span>
 
-              {tab.badge && (
-                <span
-                  className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
-                    isActive
-                      ? tab.id === 'pull-requests'
-                        ? 'bg-[#8957e5]/20 text-[#a371f7] font-bold'
-                        : 'bg-[#30363d] text-[#e6edf3] font-semibold'
-                      : tab.id === 'pull-requests'
-                      ? 'bg-[#8957e5]/15 text-[#a371f7]'
-                      : 'bg-[#21262d] text-[#8b949e]'
-                  }`}
-                >
-                  {tab.badge}
-                </span>
-              )}
-            </button>
-          );
-        })}
+                {tab.badge && (
+                  <span
+                    className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
+                      isActive
+                        ? tab.id === 'bookmarks'
+                          ? 'bg-[#8957e5]/20 text-[#a371f7] font-bold'
+                          : 'bg-[#30363d] text-[#e6edf3] font-semibold'
+                        : tab.id === 'bookmarks'
+                        ? 'bg-[#8957e5]/15 text-[#a371f7]'
+                        : 'bg-[#21262d] text-[#8b949e]'
+                    }`}
+                  >
+                    {tab.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </header>
   );
