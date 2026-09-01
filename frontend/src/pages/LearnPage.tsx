@@ -6,10 +6,12 @@ import {
   Clock,
   ArrowRight,
   ArrowLeft,
-  Check
+  Check,
+  Award
 } from 'lucide-react';
 import { LearningTopic } from '../types/navigator';
 import { YamlCodeViewer } from '../components/YamlCodeViewer';
+import { InteractiveQuiz } from '../components/InteractiveQuiz';
 
 interface LearnPageProps {
   topics: LearningTopic[];
@@ -74,7 +76,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Learn DevOps & CI/CD</h1>
             <p className="text-xs text-slate-500 mt-1">
-              Step-by-step interactive lessons with real pipeline examples and LocalStorage progress tracking.
+              Step-by-step interactive lessons, pipeline code examples, and end-of-lesson interactive quizzes.
             </p>
           </div>
 
@@ -187,7 +189,7 @@ export const LearnPage: React.FC<LearnPageProps> = ({
           </div>
         </div>
 
-        {/* Right Column: Topic Detail Reader */}
+        {/* Right Column: Topic Detail Reader + End of Lesson Interactive Quiz */}
         <div className="lg:col-span-8 bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs">
           {selectedTopic ? (
             <div className="space-y-6">
@@ -268,6 +270,12 @@ export const LearnPage: React.FC<LearnPageProps> = ({
                   </div>
                 ))}
               </div>
+
+              {/* End-of-Lesson Interactive Knowledge Check Quiz */}
+              <InteractiveQuiz
+                topicId={selectedTopic.id}
+                topicTitle={selectedTopic.title}
+              />
 
               {/* Bottom Navigation */}
               <div className="flex items-center justify-between gap-4 pt-6 border-t border-slate-100">

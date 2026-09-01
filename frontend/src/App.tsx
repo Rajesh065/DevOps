@@ -125,6 +125,7 @@ export const App: React.FC = () => {
                 bookmarkedIds={bookmarkedPlatforms}
                 onToggleBookmark={toggleBookmark}
                 completedTopicIds={completedLessons}
+                onOpenAuth={() => setIsAuthModalOpen(true)}
               />
             )}
 

@@ -15,6 +15,16 @@ export interface UserAccount {
   title: string;
 }
 
+export interface QuizQuestion {
+  id: string;
+  topicId: string; // Map to lesson id (e.g. 'topic-1', 'topic-2' or 'all')
+  question: string;
+  options: string[];
+  correctAnswerIndex: number;
+  explanation: string;
+  conceptKey: string;
+}
+
 export interface LearningTopic {
   id: string;
   slug: string;
