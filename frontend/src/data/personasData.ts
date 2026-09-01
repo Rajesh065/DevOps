@@ -6,24 +6,27 @@ export const predefinedPersonas: Record<UserRole, UserAccount> = {
     name: 'Alex Rivera',
     email: 'alex.student@devopsnav.io',
     role: 'student',
+    title: 'Student / Beginner',
     avatarText: 'AR',
     joinedDate: 'Joined Aug 2026',
-    bio: 'DevOps Beginner exploring fundamentals, CAMS culture, and basic pipeline syntax.'
+    bio: 'Learning DevOps fundamentals, CAMS model, and Linux container basics.'
   },
   developer: {
     id: 'user-developer',
     name: 'Sarah Chen',
     email: 'sarah.dev@enterprise.io',
     role: 'developer',
+    title: 'Software Developer',
     avatarText: 'SC',
     joinedDate: 'Joined Jul 2026',
-    bio: 'Full-Stack Software Engineer building microservices and automating CI/CD workflows.'
+    bio: 'Full-Stack Software Engineer building microservices, authoring YAML pipelines, and Dockerizing apps.'
   },
   architect: {
     id: 'user-architect',
     name: 'Marcus Vance',
     email: 'marcus.architect@cloudscale.io',
     role: 'architect',
+    title: 'Tech Lead / Architect',
     avatarText: 'MV',
     joinedDate: 'Joined May 2026',
     bio: 'Principal Platform Architect designing enterprise multi-cloud infrastructure and GitOps.'
@@ -33,9 +36,43 @@ export const predefinedPersonas: Record<UserRole, UserAccount> = {
     name: 'Priya Sharma',
     email: 'priya.devops@careerhub.io',
     role: 'jobseeker',
+    title: 'DevOps Job Aspirant',
     avatarText: 'PS',
     joinedDate: 'Joined Aug 2026',
     bio: 'DevOps & SRE Job Aspirant mastering scenario-based interview questions and DORA metrics.'
+  }
+};
+
+// Strict Role-Based Permissions Matrix
+export const rolePermissions: Record<UserRole, {
+  allowedPages: string[];
+  roleTitle: string;
+  badgeClass: string;
+  description: string;
+}> = {
+  student: {
+    roleTitle: 'Student / Beginner',
+    allowedPages: ['home', 'learn', 'student-dashboard'],
+    badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    description: 'Access exclusively granted to: DevOps Foundations Curriculum & Student Learning Progress.'
+  },
+  developer: {
+    roleTitle: 'Software Developer',
+    allowedPages: ['home', 'platforms', 'platform-detail', 'yaml-gen', 'bookmarks'],
+    badgeClass: 'bg-blue-50 text-blue-700 border-blue-200',
+    description: 'Access exclusively granted to: CI/CD Platforms Explorer, YAML Pipeline Generator & Saved Bookmarks.'
+  },
+  architect: {
+    roleTitle: 'Tech Lead / Architect',
+    allowedPages: ['home', 'platforms', 'platform-detail', 'compare', 'governance'],
+    badgeClass: 'bg-amber-50 text-amber-700 border-amber-200',
+    description: 'Access exclusively granted to: Side-by-Side Platform Comparison Matrix, Cloud TCO Calculator & Security Governance.'
+  },
+  jobseeker: {
+    roleTitle: 'DevOps Job Aspirant',
+    allowedPages: ['home', 'interview-prep', 'aspirant-hub'],
+    badgeClass: 'bg-purple-50 text-purple-700 border-purple-200',
+    description: 'Access exclusively granted to: Real Scenario DevOps Interview Q&A, DORA Metrics Framework & Resume Points.'
   }
 };
 

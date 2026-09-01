@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Code2, Copy, Check, FileCode, Play, Sparkles, Terminal, Layers } from 'lucide-react';
+import { Code2 } from 'lucide-react';
 import { YamlCodeViewer } from '../components/YamlCodeViewer';
 
 export const YamlGeneratorPage: React.FC = () => {
@@ -121,7 +121,6 @@ jobs:
 ${setupStep}
 ${testStep}${dockerBlock}${deployBlock}`;
     } else {
-      // GitLab CI format
       return `stages:
   - test
   ${enableDocker ? '- package\n  ' : ''}- deploy
@@ -159,51 +158,51 @@ deploy_production:
   const yamlOutput = generateYaml();
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
+    <div className="space-y-6 max-w-[1600px] mx-auto">
       {/* Top Banner */}
-      <div className="bg-[#161b22] border border-[#30363d] rounded-xl p-6 sm:p-8 space-y-3 shadow-sm">
-        <div className="flex items-center gap-2 text-xs font-mono text-[#58a6ff]">
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-3 shadow-xs">
+        <div className="flex items-center gap-2 text-xs font-mono text-blue-600 font-semibold">
           <Code2 className="w-4 h-4" />
           <span>Developer Tooling & Automation</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#e6edf3]">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
           Interactive YAML Pipeline Generator
         </h1>
-        <p className="text-xs text-[#8b949e]">
+        <p className="text-xs text-slate-500">
           Configure your stack below to generate production-ready GitHub Actions or GitLab CI pipeline files instantly.
         </p>
       </div>
 
-      {/* 2-Column Grid: Config Controls + Live YAML Output */}
+      {/* 2-Column Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left: Configuration Controls */}
-        <div className="lg:col-span-5 bg-[#161b22] border border-[#30363d] rounded-xl p-5 sm:p-6 space-y-5 shadow-sm">
-          <h2 className="text-xs font-bold text-[#e6edf3] uppercase tracking-wider font-mono">
+        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-6 space-y-5 shadow-xs">
+          <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono">
             Pipeline Configuration
           </h2>
 
           {/* Format */}
           <div className="space-y-1.5">
-            <label className="text-xs font-mono text-[#8b949e] block font-semibold">
+            <label className="text-xs font-mono text-slate-700 block font-semibold">
               CI/CD Format:
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => setPipelineFormat('github')}
-                className={`py-2 px-3 rounded text-xs font-mono border transition-all ${
+                className={`py-2 px-3 rounded-lg text-xs font-mono border transition-all ${
                   pipelineFormat === 'github'
-                    ? 'bg-[#58a6ff]/20 text-[#58a6ff] border-[#58a6ff]/50 font-bold'
-                    : 'bg-[#0d1117] text-[#8b949e] border-[#30363d]'
+                    ? 'bg-blue-600 text-white border-blue-600 font-bold shadow-xs'
+                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
                 GitHub Actions (.yml)
               </button>
               <button
                 onClick={() => setPipelineFormat('gitlab')}
-                className={`py-2 px-3 rounded text-xs font-mono border transition-all ${
+                className={`py-2 px-3 rounded-lg text-xs font-mono border transition-all ${
                   pipelineFormat === 'gitlab'
-                    ? 'bg-[#58a6ff]/20 text-[#58a6ff] border-[#58a6ff]/50 font-bold'
-                    : 'bg-[#0d1117] text-[#8b949e] border-[#30363d]'
+                    ? 'bg-blue-600 text-white border-blue-600 font-bold shadow-xs'
+                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
                 GitLab CI (.gitlab-ci.yml)
@@ -213,13 +212,13 @@ deploy_production:
 
           {/* Runtime */}
           <div className="space-y-1.5">
-            <label className="text-xs font-mono text-[#8b949e] block font-semibold">
+            <label className="text-xs font-mono text-slate-700 block font-semibold">
               Application Runtime:
             </label>
             <select
               value={runtime}
               onChange={(e) => setRuntime(e.target.value)}
-              className="w-full bg-[#0d1117] border border-[#30363d] text-[#e6edf3] text-xs px-3 py-2 rounded-md outline-none cursor-pointer"
+              className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs px-3.5 py-2.5 rounded-xl outline-none cursor-pointer focus:bg-white focus:border-blue-600"
             >
               <option value="node">Node.js (TypeScript / JavaScript)</option>
               <option value="python">Python (Pytest / FastAPI / Django)</option>
@@ -229,37 +228,37 @@ deploy_production:
           </div>
 
           {/* Toggles */}
-          <div className="space-y-3 pt-2 border-t border-[#21262d]">
-            <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-[#c9d1d9]">
+          <div className="space-y-3 pt-2 border-t border-slate-100">
+            <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-slate-700 font-medium">
               <input
                 type="checkbox"
                 checked={enableLint}
                 onChange={(e) => setEnableLint(e.target.checked)}
-                className="w-3.5 h-3.5 rounded bg-[#0d1117] border-[#30363d] text-[#58a6ff]"
+                className="w-4 h-4 rounded border-slate-300 text-blue-600"
               />
               <span>Include Static Analysis & Linter Stage</span>
             </label>
 
-            <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-[#c9d1d9]">
+            <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-slate-700 font-medium">
               <input
                 type="checkbox"
                 checked={enableDocker}
                 onChange={(e) => setEnableDocker(e.target.checked)}
-                className="w-3.5 h-3.5 rounded bg-[#0d1117] border-[#30363d] text-[#58a6ff]"
+                className="w-4 h-4 rounded border-slate-300 text-blue-600"
               />
               <span>Build & Publish Docker Container Image</span>
             </label>
           </div>
 
           {/* Deployment Target */}
-          <div className="space-y-1.5 pt-2 border-t border-[#21262d]">
-            <label className="text-xs font-mono text-[#8b949e] block font-semibold">
+          <div className="space-y-1.5 pt-2 border-t border-slate-100">
+            <label className="text-xs font-mono text-slate-700 block font-semibold">
               Deployment Target:
             </label>
             <select
               value={deployTarget}
               onChange={(e) => setDeployTarget(e.target.value)}
-              className="w-full bg-[#0d1117] border border-[#30363d] text-[#e6edf3] text-xs px-3 py-2 rounded-md outline-none cursor-pointer"
+              className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs px-3.5 py-2.5 rounded-xl outline-none cursor-pointer focus:bg-white focus:border-blue-600"
             >
               <option value="kubernetes">Kubernetes Cluster (kubectl / Helm)</option>
               <option value="cloud">Cloud VM / Bare-Metal Script</option>
@@ -268,13 +267,13 @@ deploy_production:
         </div>
 
         {/* Right: Live Generated YAML */}
-        <div className="lg:col-span-7 bg-[#161b22] border border-[#30363d] rounded-xl p-5 sm:p-6 space-y-3 shadow-sm">
+        <div className="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-6 space-y-3 shadow-xs">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs font-bold text-[#e6edf3] uppercase tracking-wider font-mono">
+            <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono">
               Live Generated Pipeline
             </h2>
-            <span className="text-[10px] font-mono text-[#3fb950]">
-              ✓ Ready for production use
+            <span className="text-[11px] font-mono text-emerald-700 font-bold">
+              ✓ Ready for production
             </span>
           </div>
 

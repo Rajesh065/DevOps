@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, BookOpen, Layers, GitCompare, Bookmark, ExternalLink, ShieldCheck, Terminal, Heart } from 'lucide-react';
+import { ShieldCheck, UserCheck } from 'lucide-react';
 
 interface FooterProps {
   setActivePage: (page: string) => void;
@@ -7,145 +7,84 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ setActivePage }) => {
   return (
-    <footer className="bg-[#161b22] border-t border-[#30363d] text-xs text-[#8b949e] mt-16 select-none">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+    <footer className="bg-white border-t border-slate-200 text-xs text-slate-500 mt-16 select-none">
+      <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {/* Col 1: Brand & Purpose */}
         <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded bg-[#21262d] border border-[#30363d] flex items-center justify-center text-[#58a6ff]">
-              <Compass className="w-3.5 h-3.5" />
-            </div>
-            <span className="font-bold text-[#e6edf3]">DevOps Navigator</span>
-          </div>
-          <p className="text-[#8b949e] leading-relaxed text-[11px]">
-            An intermediate-level DevOps learning and CI/CD platform explorer. Explore pipeline architectures, compare tools, and track your progress locally.
+          <span className="font-extrabold text-slate-900 text-sm">DevOps Navigator</span>
+          <p className="text-slate-600 leading-relaxed text-xs">
+            Role-partitioned DevOps learning, CI/CD platform explorer, and enterprise governance dashboard.
           </p>
-          <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#3fb950]">
+          <div className="flex items-center gap-1.5 text-[11px] font-mono text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded w-fit">
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>Zero database required • LocalStorage enabled</span>
           </div>
         </div>
 
-        {/* Col 2: Learning Curriculum */}
+        {/* Col 2: Persona Profiles */}
         <div className="space-y-2.5">
-          <h4 className="font-bold text-[#e6edf3] text-xs uppercase tracking-wider font-mono">Curriculum</h4>
-          <ul className="space-y-1.5 text-[11px]">
-            <li>
-              <button onClick={() => setActivePage('learn')} className="hover:text-[#58a6ff] transition-colors">
-                Introduction to DevOps & CAMS
-              </button>
-            </li>
-            <li>
-              <button onClick={() => setActivePage('learn')} className="hover:text-[#58a6ff] transition-colors">
-                The 8-Stage DevOps Lifecycle
-              </button>
-            </li>
-            <li>
-              <button onClick={() => setActivePage('learn')} className="hover:text-[#58a6ff] transition-colors">
-                Continuous Integration (CI)
-              </button>
-            </li>
-            <li>
-              <button onClick={() => setActivePage('learn')} className="hover:text-[#58a6ff] transition-colors">
-                Continuous Delivery & Canary Rollouts
-              </button>
-            </li>
-            <li>
-              <button onClick={() => setActivePage('learn')} className="hover:text-[#58a6ff] transition-colors">
-                Pipeline DAG Workflows & YAML
-              </button>
-            </li>
+          <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider font-mono">4 User Personas</h4>
+          <ul className="space-y-1.5 text-xs text-slate-600">
+            <li>🎓 <strong>Student:</strong> Foundations & 6-module curriculum</li>
+            <li>💻 <strong>Developer:</strong> CI/CD explorer & YAML generator</li>
+            <li>🏛️ <strong>Architect:</strong> Comparison matrix & TCO calculator</li>
+            <li>💼 <strong>Job Aspirant:</strong> Scenario Q&A & DORA metrics</li>
           </ul>
         </div>
 
-        {/* Col 3: CI/CD Platforms */}
+        {/* Col 3: Key Tools */}
         <div className="space-y-2.5">
-          <h4 className="font-bold text-[#e6edf3] text-xs uppercase tracking-wider font-mono">Platforms</h4>
-          <ul className="space-y-1.5 text-[11px]">
-            <li>
-              <button onClick={() => setActivePage('platforms')} className="hover:text-[#58a6ff] transition-colors">
-                GitHub Actions (Workflow Engine)
-              </button>
-            </li>
-            <li>
-              <button onClick={() => setActivePage('platforms')} className="hover:text-[#58a6ff] transition-colors">
-                GitLab CI/CD (All-In-One DevOps)
-              </button>
-            </li>
-            <li>
-              <button onClick={() => setActivePage('platforms')} className="hover:text-[#58a6ff] transition-colors">
-                Jenkins (Open Source Automation)
-              </button>
-            </li>
-            <li>
-              <button onClick={() => setActivePage('platforms')} className="hover:text-[#58a6ff] transition-colors">
-                CircleCI & Azure DevOps Pipelines
-              </button>
-            </li>
-            <li>
-              <button onClick={() => setActivePage('platforms')} className="hover:text-[#58a6ff] transition-colors">
-                ArgoCD & Tekton (Cloud-Native GitOps)
-              </button>
-            </li>
+          <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider font-mono">Platform Tools</h4>
+          <ul className="space-y-1.5 text-xs text-slate-600">
+            <li>• 8 Industry-Standard CI/CD Engines</li>
+            <li>• Interactive YAML Pipeline Builder</li>
+            <li>• Cloud SaaS vs Self-Hosted TCO ROI</li>
+            <li>• DORA Metrics & Scenario Drills</li>
           </ul>
         </div>
 
-        {/* Col 4: Quick Actions & Tools */}
+        {/* Col 4: Quick Navigation */}
         <div className="space-y-2.5">
-          <h4 className="font-bold text-[#e6edf3] text-xs uppercase tracking-wider font-mono">Navigation</h4>
-          <div className="grid grid-cols-2 gap-2 text-[11px]">
+          <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider font-mono">Navigation</h4>
+          <div className="grid grid-cols-2 gap-2 text-xs">
             <button
               onClick={() => setActivePage('home')}
-              className="px-2 py-1.5 rounded bg-[#21262d] hover:bg-[#30363d] text-[#e6edf3] text-left border border-[#30363d] transition-colors"
+              className="px-2.5 py-1.5 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 text-left border border-slate-200 transition-colors font-semibold"
             >
               Home
             </button>
             <button
               onClick={() => setActivePage('learn')}
-              className="px-2 py-1.5 rounded bg-[#21262d] hover:bg-[#30363d] text-[#e6edf3] text-left border border-[#30363d] transition-colors"
+              className="px-2.5 py-1.5 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 text-left border border-slate-200 transition-colors font-semibold"
             >
-              Learn
+              Curriculum
             </button>
             <button
               onClick={() => setActivePage('platforms')}
-              className="px-2 py-1.5 rounded bg-[#21262d] hover:bg-[#30363d] text-[#e6edf3] text-left border border-[#30363d] transition-colors"
+              className="px-2.5 py-1.5 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 text-left border border-slate-200 transition-colors font-semibold"
             >
               Platforms
             </button>
             <button
               onClick={() => setActivePage('compare')}
-              className="px-2 py-1.5 rounded bg-[#21262d] hover:bg-[#30363d] text-[#e6edf3] text-left border border-[#30363d] transition-colors"
+              className="px-2.5 py-1.5 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 text-left border border-slate-200 transition-colors font-semibold"
             >
               Compare
-            </button>
-            <button
-              onClick={() => setActivePage('dashboard')}
-              className="px-2 py-1.5 rounded bg-[#21262d] hover:bg-[#30363d] text-[#e6edf3] text-left border border-[#30363d] transition-colors"
-            >
-              Dashboard
-            </button>
-            <button
-              onClick={() => setActivePage('bookmarks')}
-              className="px-2 py-1.5 rounded bg-[#21262d] hover:bg-[#30363d] text-[#e6edf3] text-left border border-[#30363d] transition-colors"
-            >
-              Bookmarks
             </button>
           </div>
         </div>
       </div>
 
-      {/* Bottom Copyright Bar */}
-      <div className="border-t border-[#21262d] py-4 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-[#8b949e]">
-          <div>
-            <span>© 2026 DevOps Navigator. Educational Platform Explorer.</span>
-          </div>
-          <div className="flex items-center gap-4 font-mono text-[10px]">
-            <span>React 18 + Vite</span>
+      {/* Bottom Bar */}
+      <div className="border-t border-slate-100 py-4 px-4 sm:px-8 lg:px-12 bg-slate-50/50">
+        <div className="w-full max-w-[1600px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+          <span>© 2026 DevOps Navigator. Clean Educational & Platform Architecture Explorer.</span>
+          <div className="flex items-center gap-3 font-mono text-[11px]">
+            <span>React 18</span>
             <span>•</span>
             <span>Tailwind CSS</span>
             <span>•</span>
-            <span>LocalStorage Persistence</span>
+            <span>Role-Based LocalStorage</span>
           </div>
         </div>
       </div>

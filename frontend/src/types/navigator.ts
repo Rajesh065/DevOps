@@ -12,6 +12,7 @@ export interface UserAccount {
   avatarText: string;
   joinedDate: string;
   bio: string;
+  title: string;
 }
 
 export interface LearningTopic {

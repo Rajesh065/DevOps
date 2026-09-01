@@ -133,6 +133,7 @@ export function useDevOpsStorage() {
       name: name || 'DevOps User',
       email: email || 'user@devopsnav.io',
       role,
+      title: predefinedPersonas[role].title,
       avatarText: initials,
       joinedDate: 'Joined Sep 2026',
       bio: predefinedPersonas[role].bio

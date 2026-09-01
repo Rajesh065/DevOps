@@ -2,14 +2,9 @@ import React, { useState, useMemo } from 'react';
 import {
   Layers,
   Search,
-  Filter,
   X,
-  SlidersHorizontal,
   LayoutGrid,
-  List,
-  GitCompare,
-  CheckCircle2,
-  Bookmark
+  List
 } from 'lucide-react';
 import { Platform } from '../types/navigator';
 import { PlatformCard } from '../components/PlatformCard';
@@ -42,27 +37,19 @@ export const PlatformsPage: React.FC<PlatformsPageProps> = ({
 
   const filteredPlatforms = useMemo(() => {
     return platforms.filter((plat) => {
-      // Search query
       const matchesSearch =
         plat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         plat.tagline.toLowerCase().includes(searchQuery.toLowerCase()) ||
         plat.shortDescription.toLowerCase().includes(searchQuery.toLowerCase()) ||
         plat.features.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      // Difficulty
       const matchesDifficulty = difficultyFilter === 'All' || plat.difficulty === difficultyFilter;
-
-      // License
       const matchesLicense =
         licenseFilter === 'All' ||
         (licenseFilter === 'Open Source' ? plat.isOpenSource : !plat.isOpenSource);
-
-      // Deployment
       const matchesDeployment =
         deploymentFilter === 'All' ||
         (deploymentFilter === 'Cloud' ? plat.isCloudBased : plat.isSelfHosted);
-
-      // YAML Support
       const matchesYaml = !yamlOnly || plat.hasYamlSupport;
 
       return matchesSearch && matchesDifficulty && matchesLicense && matchesDeployment && matchesYaml;
@@ -85,30 +72,29 @@ export const PlatformsPage: React.FC<PlatformsPageProps> = ({
     yamlOnly;
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
+    <div className="space-y-6 max-w-[1600px] mx-auto">
       {/* Top Header Banner */}
-      <div className="bg-[#161b22] border border-[#30363d] rounded-xl p-5 sm:p-6 space-y-4 shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 space-y-4 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono text-[#58a6ff] mb-1">
+            <div className="flex items-center gap-2 text-xs font-mono text-blue-600 font-semibold mb-1">
               <Layers className="w-4 h-4" />
               <span>CI/CD & Automation Ecosystem</span>
             </div>
-            <h1 className="text-2xl font-extrabold text-[#e6edf3]">Explore CI/CD Platforms</h1>
-            <p className="text-xs text-[#8b949e] mt-1">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Explore CI/CD Platforms</h1>
+            <p className="text-xs text-slate-500 mt-1">
               Search, filter, and compare industry-standard build, deployment, and GitOps engines.
             </p>
           </div>
 
-          {/* Compare Badge Indicator */}
           {comparedIds.length > 0 && (
-            <div className="flex items-center gap-3 bg-[#0d1117] p-2.5 rounded-lg border border-[#58a6ff]/40">
-              <span className="text-xs font-mono text-[#58a6ff]">
-                {comparedIds.length} platforms selected for comparison
+            <div className="flex items-center gap-3 bg-blue-50/70 p-3 rounded-xl border border-blue-200">
+              <span className="text-xs font-mono text-blue-700 font-semibold">
+                {comparedIds.length} tools selected
               </span>
               <button
                 onClick={() => onNavigate('compare')}
-                className="px-3 py-1 bg-[#58a6ff] hover:bg-[#79c0ff] text-[#0d1117] font-bold text-xs rounded transition-colors"
+                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg transition-colors shadow-xs"
               >
                 Compare Now →
               </button>
@@ -117,19 +103,19 @@ export const PlatformsPage: React.FC<PlatformsPageProps> = ({
         </div>
 
         {/* Search Input Bar & Quick Filters */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 pt-2 border-t border-[#21262d]">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 pt-2 border-t border-slate-100">
           {/* Search Box */}
-          <div className="md:col-span-6 flex items-center gap-2 bg-[#0d1117] border border-[#30363d] focus-within:border-[#58a6ff] px-3 py-2 rounded-md transition-colors">
-            <Search className="w-4 h-4 text-[#8b949e] shrink-0" />
+          <div className="md:col-span-6 flex items-center gap-2 bg-slate-50 border border-slate-200 focus-within:border-blue-600 focus-within:bg-white px-3.5 py-2 rounded-xl transition-colors">
+            <Search className="w-4 h-4 text-slate-400 shrink-0" />
             <input
               type="text"
               placeholder="Search by name (e.g. Jenkins, GitHub, ArgoCD, Docker)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent border-none outline-none text-[#e6edf3] placeholder-[#8b949e] w-full text-xs"
+              className="bg-transparent border-none outline-none text-slate-900 placeholder-slate-400 w-full text-xs"
             />
             {searchQuery && (
-              <button onClick={() => setSearchQuery('')} className="text-[#8b949e] hover:text-[#e6edf3]">
+              <button onClick={() => setSearchQuery('')} className="text-slate-400 hover:text-slate-700">
                 <X className="w-3.5 h-3.5" />
               </button>
             )}
@@ -140,7 +126,7 @@ export const PlatformsPage: React.FC<PlatformsPageProps> = ({
             <select
               value={difficultyFilter}
               onChange={(e) => setDifficultyFilter(e.target.value)}
-              className="w-full bg-[#0d1117] border border-[#30363d] text-[#e6edf3] text-xs px-3 py-2 rounded-md outline-none cursor-pointer"
+              className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs px-3 py-2 rounded-xl outline-none cursor-pointer focus:bg-white focus:border-blue-600"
             >
               <option value="All">All Difficulties</option>
               <option value="Beginner">Beginner</option>
@@ -149,12 +135,12 @@ export const PlatformsPage: React.FC<PlatformsPageProps> = ({
             </select>
           </div>
 
-          {/* Deployment Type Dropdown */}
+          {/* Deployment Dropdown */}
           <div className="md:col-span-2">
             <select
               value={deploymentFilter}
               onChange={(e) => setDeploymentFilter(e.target.value)}
-              className="w-full bg-[#0d1117] border border-[#30363d] text-[#e6edf3] text-xs px-3 py-2 rounded-md outline-none cursor-pointer"
+              className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs px-3 py-2 rounded-xl outline-none cursor-pointer focus:bg-white focus:border-blue-600"
             >
               <option value="All">All Deployments</option>
               <option value="Cloud">Cloud (SaaS)</option>
@@ -167,7 +153,7 @@ export const PlatformsPage: React.FC<PlatformsPageProps> = ({
             <select
               value={licenseFilter}
               onChange={(e) => setLicenseFilter(e.target.value)}
-              className="w-full bg-[#0d1117] border border-[#30363d] text-[#e6edf3] text-xs px-3 py-2 rounded-md outline-none cursor-pointer"
+              className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-xs px-3 py-2 rounded-xl outline-none cursor-pointer focus:bg-white focus:border-blue-600"
             >
               <option value="All">All Licenses</option>
               <option value="Open Source">Open Source Only</option>
@@ -176,15 +162,15 @@ export const PlatformsPage: React.FC<PlatformsPageProps> = ({
           </div>
         </div>
 
-        {/* Secondary Toggles & Clear */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-xs">
+        {/* Secondary Toggles & Results Counter */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-xs border-t border-slate-100">
           <div className="flex items-center gap-4">
-            <label className="flex items-center gap-2 cursor-pointer select-none text-[#c9d1d9]">
+            <label className="flex items-center gap-2 cursor-pointer select-none text-slate-700 font-medium">
               <input
                 type="checkbox"
                 checked={yamlOnly}
                 onChange={(e) => setYamlOnly(e.target.checked)}
-                className="w-3.5 h-3.5 rounded bg-[#0d1117] border-[#30363d] text-[#58a6ff] focus:ring-0"
+                className="w-3.5 h-3.5 rounded border-slate-300 text-blue-600 focus:ring-0"
               />
               <span>YAML Pipeline Support Only</span>
             </label>
@@ -192,7 +178,7 @@ export const PlatformsPage: React.FC<PlatformsPageProps> = ({
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="text-[#58a6ff] hover:underline flex items-center gap-1 font-mono text-[11px]"
+                className="text-blue-600 font-semibold hover:underline flex items-center gap-1 font-mono text-[11px]"
               >
                 <X className="w-3 h-3" />
                 <span>Reset Filters</span>
@@ -200,18 +186,18 @@ export const PlatformsPage: React.FC<PlatformsPageProps> = ({
             )}
           </div>
 
-          <div className="flex items-center gap-2 text-[#8b949e]">
+          <div className="flex items-center gap-3 text-slate-500 font-medium">
             <span className="font-mono text-[11px]">{filteredPlatforms.length} platforms found</span>
-            <div className="flex items-center bg-[#0d1117] border border-[#30363d] rounded p-0.5">
+            <div className="flex items-center bg-slate-100 border border-slate-200 rounded-lg p-0.5">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-1 rounded ${viewMode === 'grid' ? 'bg-[#21262d] text-[#e6edf3]' : 'text-[#8b949e]'}`}
+                className={`p-1.5 rounded-md ${viewMode === 'grid' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500'}`}
               >
                 <LayoutGrid className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-1 rounded ${viewMode === 'list' ? 'bg-[#21262d] text-[#e6edf3]' : 'text-[#8b949e]'}`}
+                className={`p-1.5 rounded-md ${viewMode === 'list' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500'}`}
               >
                 <List className="w-3.5 h-3.5" />
               </button>
@@ -220,17 +206,17 @@ export const PlatformsPage: React.FC<PlatformsPageProps> = ({
         </div>
       </div>
 
-      {/* Platforms Grid / List View */}
+      {/* Platforms Grid / List */}
       {filteredPlatforms.length === 0 ? (
-        <div className="bg-[#161b22] border border-[#30363d] rounded-xl p-12 text-center space-y-3">
-          <Layers className="w-8 h-8 text-[#8b949e] mx-auto opacity-50" />
-          <h3 className="text-base font-bold text-[#e6edf3]">No matching platforms found</h3>
-          <p className="text-xs text-[#8b949e] max-w-sm mx-auto">
+        <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center space-y-3 shadow-xs">
+          <Layers className="w-8 h-8 text-slate-400 mx-auto opacity-50" />
+          <h3 className="text-base font-bold text-slate-900">No matching platforms found</h3>
+          <p className="text-xs text-slate-500 max-w-sm mx-auto">
             Try adjusting your search keywords or resetting your active filters to view all platforms.
           </p>
           <button
             onClick={clearFilters}
-            className="px-4 py-2 bg-[#21262d] hover:bg-[#30363d] text-xs font-semibold text-[#e6edf3] rounded border border-[#30363d] transition-colors"
+            className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-800 rounded-lg border border-slate-200 transition-colors"
           >
             Reset All Filters
           </button>

@@ -1,15 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   GitCompare,
   Check,
-  X,
-  Plus,
-  Trash2,
-  ExternalLink,
-  Layers,
-  ArrowRight,
-  ShieldCheck,
-  Star
+  X
 } from 'lucide-react';
 import { Platform } from '../types/navigator';
 
@@ -28,7 +21,6 @@ export const ComparePage: React.FC<ComparePageProps> = ({
   onClearCompare,
   onSelectPlatform
 }) => {
-  // Default to comparing GitHub Actions vs GitLab CI vs Jenkins if none selected
   const activeComparedIds =
     comparedIds.length > 0
       ? comparedIds
@@ -56,50 +48,50 @@ export const ComparePage: React.FC<ComparePageProps> = ({
     {
       label: 'Open Source',
       render: (p: Platform) =>
-        p.isOpenSource ? <span className="text-[#3fb950] font-bold">✓ 100% Open Source</span> : <span className="text-[#8b949e]">✕ Proprietary / SaaS</span>
+        p.isOpenSource ? <span className="text-emerald-700 font-bold">✓ 100% Open Source</span> : <span className="text-slate-500">✕ Proprietary / SaaS</span>
     },
     {
       label: 'Cloud SaaS Hosted',
       render: (p: Platform) =>
-        p.isCloudBased ? <span className="text-[#3fb950] font-bold">✓ Yes</span> : <span className="text-[#8b949e]">✕ Self-host only</span>
+        p.isCloudBased ? <span className="text-emerald-700 font-bold">✓ Yes</span> : <span className="text-slate-500">✕ Self-host only</span>
     },
     {
       label: 'Self-Hosted Support',
       render: (p: Platform) =>
-        p.isSelfHosted ? <span className="text-[#3fb950] font-bold">✓ Yes</span> : <span className="text-[#8b949e]">✕ No</span>
+        p.isSelfHosted ? <span className="text-emerald-700 font-bold">✓ Yes</span> : <span className="text-slate-500">✕ No</span>
     },
     {
       label: 'YAML Pipeline Support',
       render: (p: Platform) =>
-        p.hasYamlSupport ? <span className="text-[#3fb950] font-bold">✓ Declarative YAML</span> : <span className="text-[#d29922]">Groovy DSL</span>
+        p.hasYamlSupport ? <span className="text-emerald-700 font-bold">✓ Declarative YAML</span> : <span className="text-amber-700 font-semibold">Groovy DSL</span>
     },
     {
       label: 'Docker Native Support',
       render: (p: Platform) =>
-        p.hasDockerSupport ? <span className="text-[#3fb950] font-bold">✓ Supported</span> : <span className="text-[#8b949e]">✕ Limited</span>
+        p.hasDockerSupport ? <span className="text-emerald-700 font-bold">✓ Supported</span> : <span className="text-slate-500">✕ Limited</span>
     },
     {
       label: 'Kubernetes Integration',
       render: (p: Platform) =>
-        p.hasK8sSupport ? <span className="text-[#3fb950] font-bold">✓ Native K8s</span> : <span className="text-[#8b949e]">✕ Plugin required</span>
+        p.hasK8sSupport ? <span className="text-emerald-700 font-bold">✓ Native K8s</span> : <span className="text-slate-500">✕ Plugin required</span>
     },
     { label: 'Initial Release Year', render: (p: Platform) => `${p.releaseYear}` },
     { label: 'Community Rating', render: (p: Platform) => `★ ${p.rating} / 5.0` },
-    { label: 'Best Suited For', render: (p: Platform) => <span className="text-xs text-[#c9d1d9]">{p.bestFor}</span> }
+    { label: 'Best Suited For', render: (p: Platform) => <span className="text-xs text-slate-700 leading-relaxed">{p.bestFor}</span> }
   ];
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
+    <div className="space-y-6 max-w-[1600px] mx-auto">
       {/* Top Banner */}
-      <div className="bg-[#161b22] border border-[#30363d] rounded-xl p-5 sm:p-6 space-y-4 shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 space-y-4 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono text-[#58a6ff] mb-1">
+            <div className="flex items-center gap-2 text-xs font-mono text-blue-600 font-semibold mb-1">
               <GitCompare className="w-4 h-4" />
               <span>Side-by-Side Comparison Engine</span>
             </div>
-            <h1 className="text-2xl font-extrabold text-[#e6edf3]">Compare CI/CD Platforms</h1>
-            <p className="text-xs text-[#8b949e] mt-1">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Compare CI/CD Platforms</h1>
+            <p className="text-xs text-slate-500 mt-1">
               Select 2 or 3 platforms to evaluate features, deployment models, and ecosystem capabilities side-by-side.
             </p>
           </div>
@@ -107,7 +99,7 @@ export const ComparePage: React.FC<ComparePageProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={onClearCompare}
-              className="px-3 py-1.5 rounded bg-[#21262d] hover:bg-[#30363d] text-xs font-mono text-[#8b949e] hover:text-[#e6edf3] border border-[#30363d] transition-colors"
+              className="px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-mono text-slate-700 border border-slate-200 transition-colors"
             >
               Reset Selection
             </button>
@@ -115,8 +107,8 @@ export const ComparePage: React.FC<ComparePageProps> = ({
         </div>
 
         {/* Platform Selector Checkboxes / Pills */}
-        <div className="space-y-2 pt-2 border-t border-[#21262d]">
-          <span className="text-xs text-[#8b949e] font-mono block">Select platforms to compare (Max 4):</span>
+        <div className="space-y-2 pt-2 border-t border-slate-100">
+          <span className="text-xs text-slate-600 font-mono font-semibold block">Select platforms to compare (Max 4):</span>
           <div className="flex flex-wrap gap-2">
             {platforms.map((p) => {
               const isSelected = activeComparedIds.includes(p.id);
@@ -124,10 +116,10 @@ export const ComparePage: React.FC<ComparePageProps> = ({
                 <button
                   key={p.id}
                   onClick={() => onToggleCompare(p.id)}
-                  className={`px-3 py-1.5 rounded text-xs font-semibold border transition-all flex items-center gap-1.5 ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all flex items-center gap-1.5 ${
                     isSelected
-                      ? 'bg-[#58a6ff]/20 text-[#58a6ff] border-[#58a6ff]/50 shadow-sm'
-                      : 'bg-[#0d1117] text-[#8b949e] hover:text-[#e6edf3] border-[#30363d]'
+                      ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
+                      : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200'
                   }`}
                 >
                   {isSelected && <Check className="w-3.5 h-3.5" />}
@@ -139,13 +131,13 @@ export const ComparePage: React.FC<ComparePageProps> = ({
         </div>
 
         {/* Quick Presets */}
-        <div className="flex flex-wrap items-center gap-2 pt-2 text-[11px] font-mono text-[#8b949e]">
-          <span>Popular Presets:</span>
+        <div className="flex flex-wrap items-center gap-2 pt-2 text-[11px] font-mono text-slate-500">
+          <span className="font-semibold text-slate-700">Popular Presets:</span>
           {presets.map((preset, idx) => (
             <button
               key={idx}
               onClick={() => applyPreset(preset.ids)}
-              className="px-2.5 py-1 rounded bg-[#21262d] hover:bg-[#30363d] text-[#c9d1d9] border border-[#30363d] transition-colors"
+              className="px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors"
             >
               {preset.label}
             </button>
@@ -155,34 +147,33 @@ export const ComparePage: React.FC<ComparePageProps> = ({
 
       {/* Comparison Table */}
       {selectedPlatforms.length === 0 ? (
-        <div className="bg-[#161b22] border border-[#30363d] rounded-xl p-12 text-center space-y-3">
-          <GitCompare className="w-8 h-8 text-[#8b949e] mx-auto opacity-50" />
-          <h3 className="text-base font-bold text-[#e6edf3]">No platforms selected for comparison</h3>
-          <p className="text-xs text-[#8b949e]">
+        <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center space-y-3 shadow-xs">
+          <GitCompare className="w-8 h-8 text-slate-400 mx-auto opacity-50" />
+          <h3 className="text-base font-bold text-slate-900">No platforms selected for comparison</h3>
+          <p className="text-xs text-slate-500">
             Choose at least 2 platforms above to view their side-by-side feature comparison matrix.
           </p>
         </div>
       ) : (
-        <div className="bg-[#161b22] border border-[#30363d] rounded-xl overflow-hidden shadow-sm">
+        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
-              {/* Header: Platform Names & Actions */}
               <thead>
-                <tr className="border-b border-[#30363d] bg-[#0d1117]">
-                  <th className="p-4 font-mono text-[11px] text-[#8b949e] uppercase tracking-wider w-48 sticky left-0 bg-[#0d1117] z-10">
+                <tr className="border-b border-slate-200 bg-slate-50">
+                  <th className="p-4 font-mono text-[11px] text-slate-600 uppercase tracking-wider w-48 sticky left-0 bg-slate-50 z-10 font-bold">
                     Platform / Metric
                   </th>
                   {selectedPlatforms.map((p) => (
                     <th key={p.id} className="p-4 min-w-[220px] align-top">
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <h3 className="text-base font-bold text-[#e6edf3]">{p.name}</h3>
-                          <span className="text-[10px] text-[#8b949e] line-clamp-1">{p.tagline}</span>
+                          <h3 className="text-base font-extrabold text-slate-900">{p.name}</h3>
+                          <span className="text-[11px] text-slate-500 line-clamp-1">{p.tagline}</span>
                         </div>
                         <button
                           onClick={() => onToggleCompare(p.id)}
                           title="Remove from comparison"
-                          className="p-1 rounded text-[#8b949e] hover:text-[#f85149] hover:bg-[#21262d] transition-colors"
+                          className="p-1 rounded text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                         >
                           <X className="w-3.5 h-3.5" />
                         </button>
@@ -190,7 +181,7 @@ export const ComparePage: React.FC<ComparePageProps> = ({
 
                       <button
                         onClick={() => onSelectPlatform(p)}
-                        className="mt-3 w-full py-1.5 bg-[#21262d] hover:bg-[#30363d] text-[#e6edf3] font-semibold text-[11px] rounded border border-[#30363d] transition-colors"
+                        className="mt-3 w-full py-1.5 bg-slate-900 hover:bg-blue-600 text-white font-semibold text-[11px] rounded-lg transition-colors shadow-xs"
                       >
                         View Full Details →
                       </button>
@@ -199,15 +190,14 @@ export const ComparePage: React.FC<ComparePageProps> = ({
                 </tr>
               </thead>
 
-              {/* Rows */}
-              <tbody className="divide-y divide-[#21262d]">
+              <tbody className="divide-y divide-slate-100">
                 {comparisonRows.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-[#1c2128] transition-colors">
-                    <td className="p-3.5 font-mono text-[11px] font-semibold text-[#8b949e] sticky left-0 bg-[#161b22] z-10">
+                  <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
+                    <td className="p-3.5 font-mono text-[11px] font-bold text-slate-700 sticky left-0 bg-white z-10 border-r border-slate-100">
                       {row.label}
                     </td>
                     {selectedPlatforms.map((p) => (
-                      <td key={p.id} className="p-3.5 text-xs text-[#e6edf3]">
+                      <td key={p.id} className="p-3.5 text-xs text-slate-800">
                         {row.render(p)}
                       </td>
                     ))}
