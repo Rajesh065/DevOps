@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
-import { StudentProfileModal } from './components/StudentProfileModal';
+import { AuthModal } from './components/AuthModal';
 import { HomePage } from './pages/HomePage';
 import { LearnPage } from './pages/LearnPage';
 import { LabsPage } from './pages/LabsPage';
@@ -11,6 +11,9 @@ import { ComparePage } from './pages/ComparePage';
 import { MasterQuizPage } from './pages/MasterQuizPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { BookmarksPage } from './pages/BookmarksPage';
+import { InterviewPrepPage } from './pages/InterviewPrepPage';
+import { YamlGeneratorPage } from './pages/YamlGeneratorPage';
+import { ArchitectGovernancePage } from './pages/ArchitectGovernancePage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 import { learningTopicsData } from './data/learningTopics';
@@ -24,12 +27,14 @@ export const App: React.FC = () => {
   const [selectedTopicSlug, setSelectedTopicSlug] = useState<string | null>(null);
   const [selectedPlatform, setSelectedPlatform] = useState<Platform | null>(null);
   const [comparedPlatformIds, setComparedPlatformIds] = useState<string[]>([]);
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
 
-  // LocalStorage Custom Hook with Student Persistence
+  // LocalStorage Custom Hook with 4-Persona Support
   const {
     currentUser,
-    updateStudentProfile,
+    switchPersona,
+    loginUser,
+    signupUser,
     completedLessons,
     bookmarkedPlatforms,
     recentlyViewed,
@@ -78,7 +83,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-slate-50 text-slate-900 transition-colors duration-150">
-      {/* Student Top Navigation Bar */}
+      {/* Dynamic 4-Role Navigation Bar */}
       <Navbar
         activePage={activePage}
         setActivePage={setActivePage}
@@ -86,10 +91,10 @@ export const App: React.FC = () => {
         completedCount={completedLessons.length}
         totalLessons={learningTopicsData.length}
         bookmarkCount={bookmarkedPlatforms.length}
-        onOpenProfile={() => setIsProfileModalOpen(true)}
+        onOpenAuth={() => setIsAuthModalOpen(true)}
       />
 
-      {/* Main Student Learning Body - Balanced Full Width (Max 1600px with clean margins) */}
+      {/* Main Content Area - Full Width with Balanced Margin (Max 1600px) */}
       <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 py-6 sm:py-8">
         {activePage === 'home' && (
           <HomePage
@@ -100,7 +105,8 @@ export const App: React.FC = () => {
             bookmarkedIds={bookmarkedPlatforms}
             onToggleBookmark={toggleBookmark}
             completedTopicIds={completedLessons}
-            onOpenAuth={() => setIsProfileModalOpen(true)}
+            onOpenAuth={() => setIsAuthModalOpen(true)}
+            currentUser={currentUser}
           />
         )}
 
@@ -150,6 +156,18 @@ export const App: React.FC = () => {
           />
         )}
 
+        {activePage === 'yaml-gen' && (
+          <YamlGeneratorPage />
+        )}
+
+        {activePage === 'governance' && (
+          <ArchitectGovernancePage />
+        )}
+
+        {activePage === 'interview-prep' && (
+          <InterviewPrepPage />
+        )}
+
         {activePage === 'master-quiz' && (
           <MasterQuizPage />
         )}
@@ -166,6 +184,7 @@ export const App: React.FC = () => {
             onSelectPlatform={handleSelectPlatform}
             onNavigate={handleNavigate}
             onResetProgress={resetProgress}
+            currentUser={currentUser}
           />
         )}
 
@@ -181,20 +200,18 @@ export const App: React.FC = () => {
           />
         )}
 
-        {!['home', 'learn', 'labs', 'platforms', 'platform-detail', 'compare', 'master-quiz', 'dashboard', 'bookmarks'].includes(activePage) && (
+        {!['home', 'learn', 'labs', 'platforms', 'platform-detail', 'compare', 'yaml-gen', 'governance', 'interview-prep', 'master-quiz', 'dashboard', 'bookmarks'].includes(activePage) && (
           <NotFoundPage onNavigate={handleNavigate} />
         )}
       </main>
 
-      {/* Student Profile Modal */}
-      <StudentProfileModal
-        isOpen={isProfileModalOpen}
-        onClose={() => setIsProfileModalOpen(false)}
-        currentUser={currentUser}
-        onUpdateProfile={updateStudentProfile}
-        completedLessonsCount={completedLessons.length}
-        totalLessons={learningTopicsData.length}
-        onResetProgress={resetProgress}
+      {/* 4-Role Authentication & Quick Persona Switcher Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLogin={loginUser}
+        onSignup={signupUser}
+        currentRole={currentUser.role}
       />
 
       {/* Global Clean Footer */}

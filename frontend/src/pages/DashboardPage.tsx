@@ -8,9 +8,16 @@ import {
   RotateCcw,
   ArrowRight,
   Trash2,
-  Award
+  Award,
+  Code2,
+  Briefcase,
+  Building2,
+  GraduationCap,
+  Copy,
+  Check
 } from 'lucide-react';
-import { Platform, LearningTopic } from '../types/navigator';
+import { Platform, LearningTopic, UserAccount } from '../types/navigator';
+import { rolePermissions } from '../data/personasData';
 
 interface DashboardPageProps {
   topics: LearningTopic[];
@@ -23,6 +30,7 @@ interface DashboardPageProps {
   onSelectPlatform: (platform: Platform) => void;
   onNavigate: (page: string, param?: string) => void;
   onResetProgress: () => void;
+  currentUser: UserAccount;
 }
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({
@@ -35,7 +43,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   onToggleBookmark,
   onSelectPlatform,
   onNavigate,
-  onResetProgress
+  onResetProgress,
+  currentUser
 }) => {
   const completedCount = completedLessonIds.length;
   const totalLessons = topics.length;
@@ -43,23 +52,31 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
   const bookmarkedPlatforms = platforms.filter(p => bookmarkedPlatformIds.includes(p.id));
   const recentlyViewedPlatforms = platforms.filter(p => recentlyViewedIds.includes(p.id));
+  const currentRoleInfo = rolePermissions[currentUser.role] || rolePermissions.student;
 
   return (
     <div className="space-y-8 max-w-[1600px] mx-auto">
       {/* Top Banner */}
       <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-4 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-mono text-blue-600 font-semibold mb-1">
-              <LayoutDashboard className="w-4 h-4" />
-              <span>Personal Learning & Bookmark Hub</span>
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold text-base font-mono">
+              {currentUser.avatarText || 'U'}
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-              Student Progress Dashboard
-            </h1>
-            <p className="text-xs text-slate-500 mt-1">
-              Track your DevOps curriculum progress, saved platform bookmarks, and activity history locally.
-            </p>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono border font-semibold ${currentRoleInfo.badgeClass}`}>
+                  {currentRoleInfo.roleTitle}
+                </span>
+                <span className="text-xs text-slate-500 font-mono">• {currentUser.joinedDate}</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+                {currentUser.name}'s Workspace Dashboard
+              </h1>
+              <p className="text-xs text-slate-500 mt-0.5">
+                {currentRoleInfo.primaryFocus} • {currentUser.email}
+              </p>
+            </div>
           </div>
 
           <button
@@ -77,7 +94,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
         {/* 4 Quick Stat Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-slate-100">
-          {/* Card 1: Overall Progress */}
+          {/* Card 1 */}
           <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
             <div className="flex items-center justify-between text-xs font-mono text-slate-500">
               <span>Curriculum Progress</span>
@@ -92,7 +109,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             </div>
           </div>
 
-          {/* Card 2: Completed Lessons */}
+          {/* Card 2 */}
           <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
             <div className="flex items-center justify-between text-xs font-mono text-slate-500">
               <span>Completed Lessons</span>
@@ -106,10 +123,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             </p>
           </div>
 
-          {/* Card 3: Saved Bookmarks */}
+          {/* Card 3 */}
           <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
             <div className="flex items-center justify-between text-xs font-mono text-slate-500">
-              <span>Bookmarked Platforms</span>
+              <span>Saved Bookmarks</span>
               <Bookmark className="w-4 h-4 text-purple-600" />
             </div>
             <div className="text-2xl font-extrabold text-purple-600">
@@ -124,23 +141,122 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             </button>
           </div>
 
-          {/* Card 4: Recently Viewed */}
+          {/* Card 4 */}
           <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
             <div className="flex items-center justify-between text-xs font-mono text-slate-500">
-              <span>Recently Viewed</span>
-              <History className="w-4 h-4 text-amber-600" />
+              <span>Role Permissions</span>
+              <Building2 className="w-4 h-4 text-amber-600" />
             </div>
-            <div className="text-2xl font-extrabold text-amber-600">
-              {recentlyViewedPlatforms.length}
+            <div className="text-sm font-extrabold text-slate-900 truncate">
+              {currentRoleInfo.roleTitle}
             </div>
-            <p className="text-[11px] text-slate-500 font-mono">Platforms explored</p>
+            <p className="text-[11px] text-slate-500 font-mono">Custom Workspace Active</p>
           </div>
         </div>
       </div>
 
-      {/* Main 2-Column Section */}
+      {/* Role-Specific Content Section */}
+      {currentUser.role === 'developer' && (
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-xs">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div className="flex items-center gap-2">
+              <Code2 className="w-4 h-4 text-blue-600" />
+              <h2 className="text-base font-bold text-slate-900">Developer Fast Actions & Pipeline Generators</h2>
+            </div>
+            <button
+              onClick={() => onNavigate('yaml-gen')}
+              className="text-xs text-blue-600 font-semibold hover:underline flex items-center gap-1"
+            >
+              <span>Open YAML Generator</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
+            <div onClick={() => onNavigate('yaml-gen')} className="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-blue-400 cursor-pointer space-y-1">
+              <span className="font-bold text-slate-900 block">Node.js GitHub Actions</span>
+              <span className="text-slate-500 text-[11px]">TypeScript, Vitest & Docker build</span>
+            </div>
+            <div onClick={() => onNavigate('yaml-gen')} className="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-blue-400 cursor-pointer space-y-1">
+              <span className="font-bold text-slate-900 block">Python Pytest Pipeline</span>
+              <span className="text-slate-500 text-[11px]">FastAPI, Pytest coverage & K8s deploy</span>
+            </div>
+            <div onClick={() => onNavigate('yaml-gen')} className="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-blue-400 cursor-pointer space-y-1">
+              <span className="font-bold text-slate-900 block">GitLab CI Multi-Stage</span>
+              <span className="text-slate-500 text-[11px]">Test, container package & rollout</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {currentUser.role === 'architect' && (
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-xs">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div className="flex items-center gap-2">
+              <Building2 className="w-4 h-4 text-amber-600" />
+              <h2 className="text-base font-bold text-slate-900">Platform Architect Evaluation & TCO ROI</h2>
+            </div>
+            <button
+              onClick={() => onNavigate('governance')}
+              className="text-xs text-amber-600 font-semibold hover:underline flex items-center gap-1"
+            >
+              <span>Open TCO Calculator</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <h4 className="font-bold text-slate-900 font-mono">Side-by-Side Platform Matrix</h4>
+              <p className="text-slate-600">Compare Jenkins, GitHub Actions, GitLab CI, ArgoCD across 13 enterprise governance criteria.</p>
+              <button onClick={() => onNavigate('compare')} className="text-xs text-blue-600 font-semibold hover:underline font-mono">
+                Launch Matrix →
+              </button>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <h4 className="font-bold text-slate-900 font-mono">Cloud SaaS vs Self-Hosted ROI</h4>
+              <p className="text-slate-600">Calculate annual compute, license, and sysadmin maintenance costs based on team size.</p>
+              <button onClick={() => onNavigate('governance')} className="text-xs text-blue-600 font-semibold hover:underline font-mono">
+                Calculate TCO →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {currentUser.role === 'jobseeker' && (
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-xs">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div className="flex items-center gap-2">
+              <Briefcase className="w-4 h-4 text-purple-600" />
+              <h2 className="text-base font-bold text-slate-900">Job Aspirant Career Hub & Interview Readiness</h2>
+            </div>
+            <button
+              onClick={() => onNavigate('interview-prep')}
+              className="text-xs text-purple-600 font-semibold hover:underline flex items-center gap-1"
+            >
+              <span>Practice 25+ Interview Questions</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
+            <div onClick={() => onNavigate('interview-prep')} className="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-purple-400 cursor-pointer space-y-1">
+              <span className="font-bold text-purple-700 block">Scenario Technical Q&A</span>
+              <span className="text-slate-500 text-[11px]">Canary, GitOps, DORA metrics</span>
+            </div>
+            <div onClick={() => onNavigate('master-quiz')} className="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-purple-400 cursor-pointer space-y-1">
+              <span className="font-bold text-purple-700 block">30 Qs Readiness Test</span>
+              <span className="text-slate-500 text-[11px]">Instant score breakdown</span>
+            </div>
+            <div onClick={() => onNavigate('interview-prep')} className="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-purple-400 cursor-pointer space-y-1">
+              <span className="font-bold text-purple-700 block">Resume Bullet Points</span>
+              <span className="text-slate-500 text-[11px]">1-click copy to LinkedIn/CV</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main 2-Column Section: Curriculum Checklist + Saved Platforms */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Completed Lessons Checklist */}
+        {/* Left Column: Curriculum Checklist */}
         <div className="lg:col-span-6 bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-xs">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div className="flex items-center gap-2">

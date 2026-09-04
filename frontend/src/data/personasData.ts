@@ -9,7 +9,7 @@ export const predefinedPersonas: Record<UserRole, UserAccount> = {
     title: 'Student / Beginner',
     avatarText: 'AR',
     joinedDate: 'Joined Aug 2026',
-    bio: 'Learning DevOps fundamentals, CAMS model, and Linux container basics.'
+    bio: 'DevOps beginner learning CAMS philosophy, 8-phase lifecycle, automated testing, and container basics.'
   },
   developer: {
     id: 'user-developer',
@@ -19,7 +19,7 @@ export const predefinedPersonas: Record<UserRole, UserAccount> = {
     title: 'Software Developer',
     avatarText: 'SC',
     joinedDate: 'Joined Jul 2026',
-    bio: 'Full-Stack Software Engineer building microservices, authoring YAML pipelines, and Dockerizing apps.'
+    bio: 'Full-Stack Software Engineer building microservices, authoring YAML pipelines, and Dockerizing applications.'
   },
   architect: {
     id: 'user-architect',
@@ -29,7 +29,7 @@ export const predefinedPersonas: Record<UserRole, UserAccount> = {
     title: 'Tech Lead / Architect',
     avatarText: 'MV',
     joinedDate: 'Joined May 2026',
-    bio: 'Principal Platform Architect designing enterprise multi-cloud infrastructure and GitOps.'
+    bio: 'Principal Platform Architect evaluating cloud toolchains, calculating TCO ROI, and designing GitOps security.'
   },
   jobseeker: {
     id: 'user-jobseeker',
@@ -39,40 +39,101 @@ export const predefinedPersonas: Record<UserRole, UserAccount> = {
     title: 'DevOps Job Aspirant',
     avatarText: 'PS',
     joinedDate: 'Joined Aug 2026',
-    bio: 'DevOps & SRE Job Aspirant mastering scenario-based interview questions and DORA metrics.'
+    bio: 'DevOps & SRE candidate preparing for scenario-based technical interviews, DORA metrics, and resume talking points.'
   }
 };
 
-// Strict Role-Based Permissions Matrix
+// Role-Based Persona Config
 export const rolePermissions: Record<UserRole, {
-  allowedPages: string[];
   roleTitle: string;
   badgeClass: string;
+  primaryFocus: string;
   description: string;
+  navItems: { id: string; label: string; badge?: string }[];
+  keyFeatures: string[];
 }> = {
   student: {
     roleTitle: 'Student / Beginner',
-    allowedPages: ['home', 'learn', 'student-dashboard'],
     badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    description: 'Access exclusively granted to: DevOps Foundations Curriculum & Student Learning Progress.'
+    primaryFocus: 'DevOps Foundations & Hands-On Practice',
+    description: 'Designed for beginners to master DevOps fundamentals, run interactive simulations, and test their knowledge with quizzes.',
+    navItems: [
+      { id: 'home', label: 'Home' },
+      { id: 'learn', label: 'Curriculum (6 Modules)' },
+      { id: 'labs', label: 'Interactive Labs & Simulators', badge: 'Demos' },
+      { id: 'master-quiz', label: 'Master Quiz (30 Qs)', badge: 'Score' },
+      { id: 'dashboard', label: 'Student Dashboard' }
+    ],
+    keyFeatures: [
+      '6 Comprehensive DevOps Learning Modules with code snippets',
+      'Real-Time 8-Stage Lifecycle Terminal Simulator',
+      'CI vs CD vs CD+ Interactive Execution Flow Playground',
+      'End-of-Lesson Quizzes & 30-Question Assessment with Scorecards',
+      'Local learning progress tracking & completion checklists'
+    ]
   },
   developer: {
     roleTitle: 'Software Developer',
-    allowedPages: ['home', 'platforms', 'platform-detail', 'yaml-gen', 'bookmarks'],
     badgeClass: 'bg-blue-50 text-blue-700 border-blue-200',
-    description: 'Access exclusively granted to: CI/CD Platforms Explorer, YAML Pipeline Generator & Saved Bookmarks.'
+    primaryFocus: 'CI/CD Pipelines & YAML Automation',
+    description: 'Tailored for software engineers building microservices, authoring YAML workflow files, and exploring build engines.',
+    navItems: [
+      { id: 'home', label: 'Home' },
+      { id: 'platforms', label: 'CI/CD Platforms (8 Tools)', badge: 'Engines' },
+      { id: 'yaml-gen', label: 'YAML Generator', badge: 'Tool' },
+      { id: 'labs', label: 'Execution Playground' },
+      { id: 'bookmarks', label: 'Saved Templates' },
+      { id: 'dashboard', label: 'Developer Dashboard' }
+    ],
+    keyFeatures: [
+      'Catalog of 8 Industry CI/CD Engines with syntax & pros/cons',
+      'Interactive YAML Pipeline Generator for Node, Python, Go, Java',
+      'Live execution pipeline runner with staging & production gates',
+      'Personal bookmarked platform configs and pipeline templates',
+      'Docker container image building & Kubernetes manifests integration'
+    ]
   },
   architect: {
     roleTitle: 'Tech Lead / Architect',
-    allowedPages: ['home', 'platforms', 'platform-detail', 'compare', 'governance'],
     badgeClass: 'bg-amber-50 text-amber-700 border-amber-200',
-    description: 'Access exclusively granted to: Side-by-Side Platform Comparison Matrix, Cloud TCO Calculator & Security Governance.'
+    primaryFocus: 'Enterprise Tool Evaluation & Cost Optimization',
+    description: 'Engineered for platform architects and team leads deciding tooling, calculating ROI, and reviewing security governance.',
+    navItems: [
+      { id: 'home', label: 'Home' },
+      { id: 'platforms', label: 'Platforms Catalog' },
+      { id: 'compare', label: 'Comparison Matrix', badge: 'Compare' },
+      { id: 'governance', label: 'TCO & Cost Calculator', badge: 'ROI' },
+      { id: 'labs', label: 'ArgoCD Canary Lab' },
+      { id: 'dashboard', label: 'Architect Dashboard' }
+    ],
+    keyFeatures: [
+      'Side-by-Side Platform Comparison Matrix (13 Evaluation Criteria)',
+      'Cloud SaaS vs Self-Hosted TCO ROI Cost Calculator with team scaling',
+      'Enterprise Compliance Checklist: OPA Policy-as-Code, SOC2, Air-Gapped',
+      'ArgoCD GitOps Canary Rollout & Prometheus Auto-Rollback Simulation',
+      'Executive tooling trade-offs, licensing models, and deployment strategies'
+    ]
   },
   jobseeker: {
     roleTitle: 'DevOps Job Aspirant',
-    allowedPages: ['home', 'interview-prep', 'aspirant-hub'],
     badgeClass: 'bg-purple-50 text-purple-700 border-purple-200',
-    description: 'Access exclusively granted to: Real Scenario DevOps Interview Q&A, DORA Metrics Framework & Resume Points.'
+    primaryFocus: 'Interview Mastery & DORA Metrics',
+    description: 'Built for job candidates preparing for DevOps/SRE interviews, practicing scenario questions, and boosting resumes.',
+    navItems: [
+      { id: 'home', label: 'Home' },
+      { id: 'interview-prep', label: 'Scenario Interview Q&A', badge: '25+ Qs' },
+      { id: 'master-quiz', label: 'Interview Readiness Quiz', badge: '30 Qs' },
+      { id: 'platforms', label: 'Platforms Review' },
+      { id: 'learn', label: 'Foundations Reference' },
+      { id: 'dashboard', label: 'Aspirant Career Hub' }
+    ],
+    keyFeatures: [
+      '25+ Real-World Scenario-Based Technical Interview Questions & Answers',
+      '4 DORA Metrics Framework & Elite Performance Thresholds',
+      '1-Click Copyable Portfolio Resume Talking Points for LinkedIn',
+      '30-Question Assessment with detailed concept scorecards',
+      'Production incident troubleshooting scenarios and answers'
+    ]
   }
 };
 

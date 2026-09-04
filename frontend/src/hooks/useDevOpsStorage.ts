@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { UserAccount } from '../types/navigator';
+import { UserAccount, UserRole } from '../types/navigator';
 import { predefinedPersonas } from '../data/personasData';
 
 const STORAGE_KEYS = {
@@ -7,11 +7,11 @@ const STORAGE_KEYS = {
   BOOKMARKED_PLATFORMS: 'devops_nav_bookmarked_platforms',
   RECENTLY_VIEWED: 'devops_nav_recently_viewed',
   THEME: 'devops_nav_theme',
-  CURRENT_USER: 'devops_nav_student_user'
+  CURRENT_USER: 'devops_nav_active_persona_user'
 };
 
 export function useDevOpsStorage() {
-  // 1. Current Student User Account (Default to Student Alex Rivera)
+  // 1. Current Active User Account (Defaults to student)
   const [currentUser, setCurrentUser] = useState<UserAccount>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
@@ -25,9 +25,9 @@ export function useDevOpsStorage() {
   const [completedLessons, setCompletedLessons] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.COMPLETED_LESSONS);
-      return saved ? JSON.parse(saved) : ['topic-1'];
+      return saved ? JSON.parse(saved) : ['topic-1', 'topic-2'];
     } catch {
-      return ['topic-1'];
+      return ['topic-1', 'topic-2'];
     }
   });
 
@@ -84,14 +84,50 @@ export function useDevOpsStorage() {
     }
   }, [recentlyViewed]);
 
-  // Update Student Profile
-  const updateStudentProfile = (name: string, email: string) => {
+  // Persona Actions
+  const switchPersona = (role: UserRole) => {
+    const persona = predefinedPersonas[role] || predefinedPersonas.student;
+    setCurrentUser(persona);
+  };
+
+  const loginUser = (email: string, role: UserRole) => {
+    const persona = predefinedPersonas[role] || predefinedPersonas.student;
+    setCurrentUser({
+      ...persona,
+      email: email || persona.email
+    });
+  };
+
+  const signupUser = (name: string, email: string, role: UserRole) => {
+    const base = predefinedPersonas[role] || predefinedPersonas.student;
     const initials = name
       .split(' ')
       .map(n => n[0])
       .join('')
       .substring(0, 2)
-      .toUpperCase() || 'ST';
+      .toUpperCase() || 'U';
+
+    const newUser: UserAccount = {
+      id: 'user-' + Math.random().toString(36).substring(2, 8),
+      name: name || base.name,
+      email: email || base.email,
+      role,
+      title: base.title,
+      avatarText: initials,
+      joinedDate: 'Joined Sep 2026',
+      bio: base.bio
+    };
+
+    setCurrentUser(newUser);
+  };
+
+  const updateUserProfile = (name: string, email: string) => {
+    const initials = name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .substring(0, 2)
+      .toUpperCase() || currentUser.avatarText;
 
     setCurrentUser(prev => ({
       ...prev,
@@ -133,7 +169,10 @@ export function useDevOpsStorage() {
 
   return {
     currentUser,
-    updateStudentProfile,
+    switchPersona,
+    loginUser,
+    signupUser,
+    updateUserProfile,
     completedLessons,
     bookmarkedPlatforms,
     recentlyViewed,

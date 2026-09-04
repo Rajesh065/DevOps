@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { X, Check, GraduationCap, Code2, Building2, Briefcase } from 'lucide-react';
+import { X, Check, GraduationCap, Code2, Building2, Briefcase, Sparkles, ArrowRight } from 'lucide-react';
 import { UserRole } from '../types/navigator';
-import { predefinedPersonas } from '../data/personasData';
+import { predefinedPersonas, rolePermissions } from '../data/personasData';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -18,7 +18,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onSignup,
   currentRole
 }) => {
-  const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
+  const [activeTab, setActiveTab] = useState<'quick' | 'login' | 'signup'>('quick');
   const [selectedRole, setSelectedRole] = useState<UserRole>(currentRole);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -30,30 +30,38 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     {
       role: 'student' as UserRole,
       title: 'Student / Beginner',
-      desc: 'DevOps & CI/CD Foundations, CAMS culture, and 6-module curriculum.',
+      subtitle: 'DevOps Learner',
+      desc: '6-Module Curriculum, 8-Stage Lifecycle Simulator, 30-Question Master Assessment Quiz with Scorecards.',
       icon: GraduationCap,
-      badgeColor: 'text-emerald-700 bg-emerald-50 border-emerald-200'
+      badgeColor: 'text-emerald-700 bg-emerald-50 border-emerald-200',
+      highlights: ['DevOps Curriculum (6 Modules)', '8-Stage Lifecycle Terminal Lab', 'Master Quiz (30 Qs & Scorecard)', 'Progress Tracking Checklist']
     },
     {
       role: 'developer' as UserRole,
       title: 'Software Developer',
-      desc: 'CI/CD Platforms Explorer, Interactive YAML Generator & Saved Bookmarks.',
+      subtitle: 'CI/CD & Pipeline Engineer',
+      desc: 'CI/CD Platforms Explorer (8 Engines), Interactive YAML Generator (Node/Python/Go/Java), and Saved Bookmarks.',
       icon: Code2,
-      badgeColor: 'text-blue-700 bg-blue-50 border-blue-200'
+      badgeColor: 'text-blue-700 bg-blue-50 border-blue-200',
+      highlights: ['8 CI/CD Engines & Syntax Docs', 'Interactive YAML Pipeline Builder', 'Live Execution Playground', 'Saved Platform Templates']
     },
     {
       role: 'architect' as UserRole,
       title: 'Tech Lead / Architect',
-      desc: 'Side-by-side platform comparison matrix, Cloud vs Self-host TCO & Governance.',
+      subtitle: 'Platform & Cloud Architect',
+      desc: 'Side-by-side Tool Comparison Matrix, Cloud SaaS vs Self-Hosted TCO ROI Cost Calculator, and SOC2/OPA Governance.',
       icon: Building2,
-      badgeColor: 'text-amber-700 bg-amber-50 border-amber-200'
+      badgeColor: 'text-amber-700 bg-amber-50 border-amber-200',
+      highlights: ['Side-by-Side Comparison Matrix', 'Cloud vs Self-Hosted TCO Calculator', 'ArgoCD Canary Rollout Lab', 'Enterprise Security & OPA Policies']
     },
     {
       role: 'jobseeker' as UserRole,
       title: 'DevOps Job Aspirant',
-      desc: '25+ Scenario-based interview Q&A, DORA metrics & Resume talking points.',
+      subtitle: 'SRE & Interview Candidate',
+      desc: '25+ Scenario-Based Real Production Interview Questions, DORA Metrics Cheatsheet, and 1-Click Resume Talking Points.',
       icon: Briefcase,
-      badgeColor: 'text-purple-700 bg-purple-50 border-purple-200'
+      badgeColor: 'text-purple-700 bg-purple-50 border-purple-200',
+      highlights: ['25+ Scenario Technical Q&A', 'DORA Metrics Framework (Elite Stats)', '1-Click Resume Bullet Points', 'Interview Readiness Assessment']
     }
   ];
 
@@ -67,22 +75,25 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     onClose();
   };
 
-  const handleQuickDemo = (role: UserRole) => {
+  const handleQuickSwitch = (role: UserRole) => {
     onLogin(predefinedPersonas[role].email, role);
     onClose();
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 select-none">
-      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-white">
           <div>
-            <h2 className="text-base font-bold text-slate-900">
-              {activeTab === 'login' ? 'Sign In / Persona Switcher' : 'Create New Account'}
-            </h2>
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-blue-600" />
+              <h2 className="text-base font-extrabold text-slate-900">
+                DevOps Navigator • 4 Role Logins
+              </h2>
+            </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Select your persona to unlock role-tailored DevOps features
+              Choose your role to get a tailored workspace with exactly what you need.
             </p>
           </div>
           <button
@@ -94,7 +105,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         </div>
 
         {/* Tab Switcher */}
-        <div className="grid grid-cols-2 border-b border-slate-100 text-xs font-semibold text-center bg-slate-50">
+        <div className="grid grid-cols-3 border-b border-slate-100 text-xs font-semibold text-center bg-slate-50">
+          <button
+            onClick={() => setActiveTab('quick')}
+            className={`py-3 transition-colors ${
+              activeTab === 'quick'
+                ? 'border-b-2 border-blue-600 text-blue-600 bg-white font-bold'
+                : 'text-slate-500 hover:text-slate-900'
+            }`}
+          >
+            ⚡ 1-Click Switch
+          </button>
           <button
             onClick={() => setActiveTab('login')}
             className={`py-3 transition-colors ${
@@ -103,7 +124,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 : 'text-slate-500 hover:text-slate-900'
             }`}
           >
-            Sign In (1-Click Persona)
+            Sign In
           </button>
           <button
             onClick={() => setActiveTab('signup')}
@@ -113,130 +134,146 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 : 'text-slate-500 hover:text-slate-900'
             }`}
           >
-            Create Account (Sign Up)
+            Sign Up
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 space-y-5 max-h-[80vh] overflow-y-auto">
-          {/* Persona Selection Cards */}
-          <div className="space-y-2">
-            <span className="text-xs font-mono text-slate-600 block font-semibold">
-              Select Persona & Access Level:
-            </span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {personas.map((p) => {
-                const Icon = p.icon;
-                const isSelected = selectedRole === p.role;
-                return (
-                  <div
-                    key={p.role}
-                    onClick={() => setSelectedRole(p.role)}
-                    className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
-                      isSelected
-                        ? 'bg-blue-50/40 border-blue-600 shadow-xs'
-                        : 'bg-white border-slate-200 hover:border-slate-300'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-1.5">
-                      <div className="flex items-center gap-2">
-                        <Icon className={`w-4 h-4 ${isSelected ? 'text-blue-600' : 'text-slate-600'}`} />
-                        <span className="text-xs font-bold text-slate-900">{p.title}</span>
-                      </div>
-                      {isSelected && <Check className="w-4 h-4 text-blue-600" />}
-                    </div>
-                    <p className="text-[11px] text-slate-500 leading-snug">
-                      {p.desc}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+        <div className="p-6 space-y-5 max-h-[78vh] overflow-y-auto">
+          {activeTab === 'quick' ? (
+            /* 1-Click Fast Persona Cards */
+            <div className="space-y-3">
+              <span className="text-xs font-mono text-slate-600 block font-semibold">
+                Select a Persona to Instantly Switch Workspace:
+              </span>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-3 pt-2 border-t border-slate-100">
-            {activeTab === 'signup' && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {personas.map((p) => {
+                  const Icon = p.icon;
+                  const isCurrent = currentRole === p.role;
+
+                  return (
+                    <div
+                      key={p.role}
+                      onClick={() => handleQuickSwitch(p.role)}
+                      className={`p-4 rounded-xl border cursor-pointer transition-all hover:border-blue-500 hover:shadow-xs flex flex-col justify-between ${
+                        isCurrent
+                          ? 'bg-blue-50/40 border-blue-600 ring-1 ring-blue-600'
+                          : 'bg-white border-slate-200'
+                      }`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center">
+                              <Icon className="w-4 h-4 text-blue-600" />
+                            </div>
+                            <div>
+                              <h4 className="text-xs font-extrabold text-slate-900">{p.title}</h4>
+                              <span className="text-[10px] text-slate-500 font-mono">{p.subtitle}</span>
+                            </div>
+                          </div>
+                          {isCurrent && (
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-600 text-white font-bold">
+                              Active
+                            </span>
+                          )}
+                        </div>
+
+                        <p className="text-[11px] text-slate-600 leading-relaxed mb-3">
+                          {p.desc}
+                        </p>
+
+                        <div className="space-y-1 pt-2 border-t border-slate-100 text-[10px] text-slate-600 font-mono">
+                          {p.highlights.slice(0, 3).map((h, i) => (
+                            <div key={i} className="flex items-center gap-1.5">
+                              <span className="text-emerald-600 font-bold">✓</span>
+                              <span className="line-clamp-1">{h}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <button className="mt-3 w-full py-1.5 bg-slate-900 hover:bg-blue-600 text-white font-bold text-[11px] rounded-lg transition-colors flex items-center justify-center gap-1">
+                        <span>Switch to {p.title}</span>
+                        <ArrowRight className="w-3 h-3" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            /* Sign In / Sign Up Form */
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-mono text-slate-700 block font-semibold">
+                  Select Role & Permission Level:
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {personas.map(p => (
+                    <button
+                      key={p.role}
+                      type="button"
+                      onClick={() => setSelectedRole(p.role)}
+                      className={`p-2.5 rounded-xl border text-left text-xs transition-all ${
+                        selectedRole === p.role
+                          ? 'bg-blue-50 border-blue-600 font-bold text-slate-900 shadow-2xs'
+                          : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      <div className="font-bold">{p.title}</div>
+                      <div className="text-[10px] text-slate-500 font-normal">{p.subtitle}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {activeTab === 'signup' && (
+                <div>
+                  <label className="text-xs font-mono text-slate-600 block mb-1">Full Name</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Alex Rivera"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 focus:bg-white rounded-lg px-3 py-2 text-xs text-slate-900 outline-none transition-colors"
+                  />
+                </div>
+              )}
+
               <div>
-                <label className="text-xs font-mono text-slate-600 block mb-1">Full Name</label>
+                <label className="text-xs font-mono text-slate-600 block mb-1">Email Address</label>
                 <input
-                  type="text"
-                  placeholder="e.g. Alex Rivera"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  type="email"
+                  placeholder={predefinedPersonas[selectedRole].email}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 focus:bg-white rounded-lg px-3 py-2 text-xs text-slate-900 outline-none transition-colors"
                 />
               </div>
-            )}
 
-            <div>
-              <label className="text-xs font-mono text-slate-600 block mb-1">Email Address</label>
-              <input
-                type="email"
-                placeholder={predefinedPersonas[selectedRole].email}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 focus:bg-white rounded-lg px-3 py-2 text-xs text-slate-900 outline-none transition-colors"
-              />
-            </div>
+              <div>
+                <label className="text-xs font-mono text-slate-600 block mb-1">Password</label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 focus:bg-white rounded-lg px-3 py-2 text-xs text-slate-900 outline-none transition-colors"
+                />
+              </div>
 
-            <div>
-              <label className="text-xs font-mono text-slate-600 block mb-1">Password</label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 focus:border-blue-600 focus:bg-white rounded-lg px-3 py-2 text-xs text-slate-900 outline-none transition-colors"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-lg transition-colors shadow-xs mt-2"
-            >
-              {activeTab === 'login'
-                ? `Sign In as ${predefinedPersonas[selectedRole].name}`
-                : 'Create Account & Start Exploring'}
-            </button>
-          </form>
-
-          {/* 1-Click Fast Persona Switcher */}
-          <div className="pt-3 border-t border-slate-100 space-y-2">
-            <span className="text-[11px] font-mono text-slate-500 block text-center">
-              1-Click Instant Persona Login:
-            </span>
-            <div className="grid grid-cols-2 gap-2 text-xs font-mono">
               <button
-                type="button"
-                onClick={() => handleQuickDemo('student')}
-                className="p-2 bg-slate-50 hover:bg-emerald-50 rounded-lg border border-slate-200 text-emerald-700 text-center font-medium transition-colors"
+                type="submit"
+                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition-colors shadow-xs"
               >
-                🎓 Student View
+                {activeTab === 'login'
+                  ? `Sign In as ${predefinedPersonas[selectedRole].name}`
+                  : 'Create Persona Account & Enter'}
               </button>
-              <button
-                type="button"
-                onClick={() => handleQuickDemo('developer')}
-                className="p-2 bg-slate-50 hover:bg-blue-50 rounded-lg border border-slate-200 text-blue-700 text-center font-medium transition-colors"
-              >
-                💻 Developer View
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickDemo('architect')}
-                className="p-2 bg-slate-50 hover:bg-amber-50 rounded-lg border border-slate-200 text-amber-700 text-center font-medium transition-colors"
-              >
-                🏛️ Architect View
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickDemo('jobseeker')}
-                className="p-2 bg-slate-50 hover:bg-purple-50 rounded-lg border border-slate-200 text-purple-700 text-center font-medium transition-colors"
-              >
-                💼 Job Aspirant View
-              </button>
-            </div>
-          </div>
+            </form>
+          )}
         </div>
       </div>
     </div>
